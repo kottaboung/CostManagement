@@ -26,4 +26,4 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: true
-        tags: your-dockerhub-username/costmanagement:latest
+        tags: 64200002/costmanagement:latest
