@@ -6,6 +6,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeModule } from './features/home/home.module';
+import { AboutComponent } from './features/about/about.component';
+import { AboutModule } from './features/about/about.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,8 @@ import { HomeModule } from './features/home/home.module';
     AppRoutingModule,
     NgbNavModule,
     NgbModule,
-    HomeModule
+    HomeModule,
+    AboutModule
   ],
   providers: [
    
