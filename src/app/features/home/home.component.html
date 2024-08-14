@@ -1,0 +1,37 @@
+<div class="home-container">
+    <nav class="sidebar-left" [ngClass]="{'mini': isSidebarMini}" (click)="toggleSidebar($event)">
+        <div class="sidebar-left-header m-0 p-0">
+            <p *ngIf="!isSidebarMini" class="text-name hl-text">Cost <br/> Management</p>
+            <div>
+                <a (click)="toggleSidebar($event)">
+                    <!-- <icon-svg [path]="isSidebarMini ? 'expand' : 'collapse'" [size]="'lg'" /> -->
+                </a>
+            </div>
+        </div>
+        <hr class="hr" *ngIf="!isSidebarMini">
+        <div class="sidebar-left-main">
+            <ul  (click)="preventClose($event)">
+                <li>
+                    <a id="item" routerLink="/dashboard" routerLinkActive="active-tab" class="nav-link text-name">Dashboard</a>
+                </li>
+                <li>
+                    <a id="item" routerLink="/user" routerLinkActive="active-tab" class="nav-link text-name">User</a>
+                </li>
+                <li>
+                    <a id="item" routerLink="/projects" routerLinkActive="active-tab" class="nav-link text-name">Projects</a>
+                </li>
+            </ul>   
+        </div>
+    </nav>
+    <div class="container-content">
+        <div class="header">
+            <p class="text-name">{{"Page"}}</p>
+            <div>
+                <a></a>
+            </div>
+        </div>
+        <section class="content">
+            <router-outlet></router-outlet>
+        </section>     
+    </div>
+</div>
