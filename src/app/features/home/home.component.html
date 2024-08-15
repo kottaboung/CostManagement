@@ -25,9 +25,21 @@
     </nav>
     <div class="container-content">
         <div class="header">
-            <p class="text-name">{{"Page"}}</p>
-            <div>
-                <a></a>
+            <p class="text-name">{{ this.page }}</p>
+            <div class="header-right">
+                <input type="text" class="search-bar" placeholder="Search...">
+                <div class="profile-dropdown">
+                    <button class="profile-btn">
+                        <icon-svg [path]="'User'" [size]="'6x'" [color]="'white'"></icon-svg>
+                        <!-- <span class="profile-name">Username</span> -->
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#">Profile</a>
+                        <!-- <a (click)="onSetting()">Settings</a> -->
+                         <a [routerLink]="['/about/setting']">Setting</a>
+                        <a href="#">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
         <section class="content">

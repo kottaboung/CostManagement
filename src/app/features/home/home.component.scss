@@ -84,7 +84,73 @@
 
 .header {
     padding: 1rem;
-    background-color: var(--secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-right {
+        display: flex;
+        align-items: center;
+    }
+    
+    .search-bar {
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-right: 1rem;
+    }
+    
+    .profile-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .profile-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    
+    .profile-pic {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+    
+    .profile-name {
+        font-size: 1rem;
+    }
+    
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: white;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        z-index: 1;
+        min-width: 150px;
+    }
+    
+    .dropdown-content a {
+        padding: 12px 16px;
+        display: block;
+        text-decoration: none;
+        color: black;
+        font-size: 1rem;
+    }
+    
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .profile-dropdown:hover .dropdown-content {
+        display: block;
+    }
 }
 
 .content {
