@@ -4,7 +4,8 @@ import { CommonModule } from "@angular/common";
 import { AboutRoutingModule } from "./about.routing.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SettingComponent } from "./pages/setting/setting.component";
-import { HomeModule } from "../home/home.module";
+import { SharedModule } from "../../shared/shared.module";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { HomeModule } from "../home/home.module";
         AboutRoutingModule,
         ReactiveFormsModule,
         FormsModule,
-        
+        SharedModule,
+        NgbModule
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

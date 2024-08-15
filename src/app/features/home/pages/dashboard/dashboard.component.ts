@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { Router } from 'express';
 
 @Component({
@@ -8,6 +8,6 @@ import { Router } from 'express';
 })
 export class DashboardComponent {
 
-
+  @Output() public page: string = 'dashbaord';
 
 }

@@ -6,23 +6,27 @@ import { UserComponent } from "./pages/user/user.component";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HomeRoutingModule } from "./home-routing,module";
-import { AboutModule } from "../about/about.module";
+import { SharedModule } from "../../shared/shared.module";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+
 
 
 
 @NgModule({
     declarations: [
-        HomeComponent,
-        DashboardComponent,
-        ProjectsComponent,
-        UserComponent,
+    HomeComponent,
+    DashboardComponent,
+    ProjectsComponent,
+    UserComponent,
     ],
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        HomeRoutingModule,
-    ],
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HomeRoutingModule,
+    SharedModule,
+    NgbModule,
+],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomeModule { }

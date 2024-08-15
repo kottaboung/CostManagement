@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { Router } from 'express';
+import { Component, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
@@ -7,8 +8,20 @@ import { Router } from 'express';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+
+  @Input() public page: string | undefined;
+
   public isSidebarMini = false;
 
+
+  // constructor(
+  //   private router: Router
+  // )
+  // {}
+
+  // onSetting() {
+  //   this.router.navigate(['/about/setting']);
+  // }
 
 
   toggleSidebar(event: Event): void {
