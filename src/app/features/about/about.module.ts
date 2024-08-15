@@ -17,7 +17,7 @@ import { HomeModule } from "../home/home.module";
         AboutRoutingModule,
         ReactiveFormsModule,
         FormsModule,
-        HomeModule,
+        
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

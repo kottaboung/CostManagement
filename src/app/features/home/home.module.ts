@@ -22,7 +22,6 @@ import { AboutModule } from "../about/about.module";
         ReactiveFormsModule,
         FormsModule,
         HomeRoutingModule,
-        AboutModule
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
