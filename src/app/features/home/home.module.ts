@@ -6,6 +6,7 @@ import { UserComponent } from "./pages/user/user.component";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HomeRoutingModule } from "./home-routing,module";
+import { AboutModule } from "../about/about.module";
 
 
 
@@ -20,7 +21,7 @@ import { HomeRoutingModule } from "./home-routing,module";
         CommonModule,
         ReactiveFormsModule,
         FormsModule,
-        HomeRoutingModule
+        HomeRoutingModule,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
