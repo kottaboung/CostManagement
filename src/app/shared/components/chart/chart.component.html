@@ -1,0 +1,18 @@
+<div *ngIf="isBrowser; else loading">
+  <div>
+    <form [formGroup]="formGroup">
+      <div class="form-group col-2">
+        <label for="yearSelect">Select Year</label>
+        <select id="yearSelect" formControlName="year" class="form-control">
+          <option *ngFor="let year of years" [value]="year.year">
+            {{ year.label }}
+          </option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div echarts [options]="chartOption" (chartClick)="onChartClick($event)" class="chart-container"></div>
+</div>
+<ng-template #loading>
+  <p>Loading chart...</p>
+</ng-template>
