@@ -8,8 +8,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HomeRoutingModule } from "./home-routing,module";
 import { SharedModule } from "../../shared/shared.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-
-
+import { ChartDetailComponent } from './modals/chart-detail/chart-detail.component';
+import { MatDialogModule } from "@angular/material/dialog";
 
 
 @NgModule({
@@ -18,6 +18,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
     DashboardComponent,
     ProjectsComponent,
     UserComponent,
+    ChartDetailComponent,
     ],
     imports: [
     CommonModule,
@@ -26,6 +27,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
     HomeRoutingModule,
     SharedModule,
     NgbModule,
+    MatDialogModule
 ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
