@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { EChartsOption } from 'echarts';
 import { FormGroup, FormControl } from '@angular/forms';
 import { mockData, YearDetail } from '../../../features/home/mockup-date';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-chart',
@@ -22,7 +23,7 @@ export class ChartComponent implements OnInit {
 
   @Output() chartItemClicked = new EventEmitter<any>();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.formGroup = new FormGroup({
       year: new FormControl(2024) // Default year
@@ -31,9 +32,11 @@ export class ChartComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isBrowser) {
+      this.loadingService.showLoading();
       this.initializeChart();
       this.formGroup.get('year')?.valueChanges.subscribe(() => {
         this.initializeChart(); // Update chart when year changes
+        this.loadingService.hideLoading();
       });
     }
   }
