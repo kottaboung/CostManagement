@@ -26,10 +26,10 @@ export class DashboardComponent implements OnInit{
   }
 
   updateChartData(year: number) {
-    this.loadingService.show();
+    this.loadingService.showLoading();
     setTimeout(() => {
       this.chartData = mockData.find(data => data.year === year);
-      this.loadingService.hide();
+      this.loadingService.hideLoading();
       },
     );
   }

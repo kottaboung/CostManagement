@@ -461,47 +461,47 @@ ng-select.ng-select.form-control .ng-select-container .ng-value-container .ng-in
     }
 }
 
-::-webkit-scrollbar {
-    width: var(--scrollbar-width);
-}
+// ::-webkit-scrollbar {
+//     width: var(--scrollbar-width);
+// }
 
-/* Track */
-::-webkit-scrollbar-track {
-    background-color: #FFFFFF;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-}
+// /* Track */
+// ::-webkit-scrollbar-track {
+//     background-color: #FFFFFF;
+//     -webkit-border-radius: 5px;
+//     border-radius: 5px;
+// }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    background-color: #2255CE;
-}
+// /* Handle */
+// ::-webkit-scrollbar-thumb {
+//     -webkit-border-radius: 5px;
+//     border-radius: 5px;
+//     background-color: #2255CE;
+// }
 
-::-webkit-scrollbar-thumb:window-inactive {
-    background: #2255CE;
-}
+// ::-webkit-scrollbar-thumb:window-inactive {
+//     background: #2255CE;
+// }
 
-.custom-input-otp {
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 8px !important;
-    border: solid 1px #CCCCCC !important;
+// .custom-input-otp {
+//     width: 36px !important;
+//     height: 36px !important;
+//     border-radius: 8px !important;
+//     border: solid 1px #CCCCCC !important;
 
-    &:hover,
-    &:focus,
-    &:active {
-        border: solid 1px #CCCCCC !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-}
+//     &:hover,
+//     &:focus,
+//     &:active {
+//         border: solid 1px #CCCCCC !important;
+//         box-shadow: none !important;
+//         outline: none !important;
+//     }
+// }
 
 
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+// html, body { height: 100%; }
+// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

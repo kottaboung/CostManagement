@@ -28,47 +28,57 @@ export interface Project {
         {
           month: 'February',
           projects: [
-            { projectName: 'Project C', cost: 7000000 },
-            { projectName: 'Project D', cost: 3000000 },
+           
           ],
         },
-        // ... more months
         {
-          month: 'December',
-          projects: [
-            { projectName: 'Project E', cost: 12000000 },
-            { projectName: 'Project F', cost: 4000000 },
-          ],
-        },
-      ],
-    },
-    {
-      year: 2023,
-      details: [
-        {
-          month: 'January',
-          projects: [
-            { projectName: 'Project G', cost: 8000000 },
-            { projectName: 'Project H', cost: 6000000 },
-          ],
+          month: 'March',
+          projects: []
         },
         {
           month: 'April',
-          projects: [
-            { projectName: 'Project I', cost: 5000000 },
-            { projectName: 'Project J', cost: 7000000 },
-          ],
+          projects:[]
         },
-        // ... more months
+        {
+          month: 'May',
+          projects:[]
+        },
+        {
+          month: 'June',
+          projects:[]
+        },
+        {
+          month: 'July',
+          projects:[]
+        },
+        {
+          month: 'August',
+          projects:[]
+        },
+        {
+          month: 'September',
+          projects:[]
+        },
+        {
+          month: 'October',
+          projects:[]
+        },
+        {
+          month: 'November',
+          projects:[]
+        },
+        {
+          month: 'December',
+          projects:[]
+        },
         {
           month: 'December',
           projects: [
-            { projectName: 'Project K', cost: 11000000 },
-            { projectName: 'Project L', cost: 3000000 },
+            
           ],
         },
       ],
     },
-    // ... more years if needed
+    
   ];
   
