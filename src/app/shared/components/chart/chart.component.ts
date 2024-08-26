@@ -1,9 +1,7 @@
 import { Component, OnInit, PLATFORM_ID, Inject, Output, EventEmitter } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { EChartsOption } from 'echarts';
-import { FormGroup, FormControl } from '@angular/forms';
-import { mockData, YearDetail } from '../../../features/home/mockup-date';
-import { LoadingService } from '../../services/loading.service';
+import { mockData } from '../../../features/home/mockup-date';
 
 @Component({
   selector: 'app-chart',
@@ -13,8 +11,6 @@ import { LoadingService } from '../../services/loading.service';
 export class ChartComponent implements OnInit {
   chartOption: EChartsOption | null = null;
   isBrowser: boolean;
-  formGroup: FormGroup;
-  
   years = [
     { year: 2024, label: '2024' },
     { year: 2023, label: '2023' },
@@ -23,27 +19,23 @@ export class ChartComponent implements OnInit {
 
   @Output() chartItemClicked = new EventEmitter<any>();
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
-    this.formGroup = new FormGroup({
-      year: new FormControl(2024) // Default year
-    });
   }
 
   ngOnInit(): void {
     if (this.isBrowser) {
-      this.loadingService.showLoading();
-      this.initializeChart();
-      this.formGroup.get('year')?.valueChanges.subscribe(() => {
-        this.initializeChart(); // Update chart when year changes
-        this.loadingService.hideLoading();
-      });
+      this.initializeChart(this.years[0].year);  // Initialize with the first year
     }
   }
 
-  initializeChart(): void {
-    const selectedYear = this.formGroup.get('year')?.value;
-    const yearData = mockData.find(d => d.year === selectedYear);
+  onYearChange(event: Event): void {
+    const selectedYear = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.initializeChart(selectedYear);
+  }
+
+  initializeChart(year: number): void {
+    const yearData = mockData.find(d => d.year === year);
 
     if (yearData) {
       this.chartOption = {
@@ -66,7 +58,7 @@ export class ChartComponent implements OnInit {
   }
 
   onChartClick(event: any): void {
-    const selectedYear = this.formGroup.get('year')?.value;
+    const selectedYear = parseInt((document.getElementById('yearSelect') as HTMLSelectElement).value, 10);
     const monthData = mockData.find(d => d.year === selectedYear)?.details.find(d => d.month === event.name);
     if (monthData) {
       this.chartItemClicked.emit(monthData);

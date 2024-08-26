@@ -1,3 +1,3 @@
-export type IconName = 'User' | 'Dashboard-Icon'
+export type IconName = 'User' | 'Dashboard-Icon' | 'User2'
 
     
