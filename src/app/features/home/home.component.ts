@@ -10,9 +10,8 @@ import { Router } from '@angular/router';
 export class HomeComponent {
 
   @Input() public page: string | undefined;
-
   public isSidebarMini = false;
-
+  isDropdownOpen: boolean = false;
 
   // constructor(
   //   private router: Router
@@ -30,6 +29,10 @@ export class HomeComponent {
       event.stopPropagation();
     }
     this.isSidebarMini = !this.isSidebarMini;
+  }
+
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   preventClose(event: Event): void {

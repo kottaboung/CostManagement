@@ -75,7 +75,7 @@ export class ChartComponent implements OnInit {
     const currentMonthIndex = isCurrentYear ? new Date().getMonth() : 11;
 
     for (let month = 0; month <= currentMonthIndex; month++) {
-      months.push(`${this.getMonthName(month)} ${year}`);
+      months.push(this.getMonthName(month));  // Only push the month name
     }
 
     return months;
@@ -90,25 +90,20 @@ export class ChartComponent implements OnInit {
 
   getMonthData(projects: Projects[], monthsInYear: string[]): { month: string, totalCost: number, projects: Projects[] }[] {
     const monthMap = new Map<string, { totalCost: number, projects: Projects[] }>();
-
-    // Initialize monthMap with zero cost for all months in the year
+  
+    // Initialize monthMap with zero cost for all months
     monthsInYear.forEach(month => {
       monthMap.set(month, { totalCost: 0, projects: [] });
     });
-
+  
     // Iterate through each project and update the costs for the months
     projects.forEach(p => {
       const projectYear = p.createdDate.getFullYear();
       const projectMonthIndex = p.createdDate.getMonth();
-
+  
       // Start accumulating costs from the project's created month to the end of the year
-      monthsInYear.forEach(month => {
-        const [monthName, year] = month.split(' ');
-        const monthIndex = this.getMonthNameIndex(monthName);
-        if (
-          parseInt(year, 10) > projectYear ||
-          (parseInt(year, 10) === projectYear && monthIndex >= projectMonthIndex)
-        ) {
+      monthsInYear.forEach((month, index) => {
+        if (projectYear < this.currentYear || (projectYear === this.currentYear && index >= projectMonthIndex)) {
           const monthData = monthMap.get(month)!;
           monthData.totalCost += p.cost;
           if (!monthData.projects.includes(p)) {
@@ -117,7 +112,7 @@ export class ChartComponent implements OnInit {
         }
       });
     });
-
+  
     // Return the updated month data
     return monthsInYear.map(month => ({
       month,

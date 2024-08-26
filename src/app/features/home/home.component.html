@@ -10,7 +10,7 @@
         </div>
         <hr class="hr" *ngIf="!isSidebarMini">
         <div class="sidebar-left-main">
-            <ul  (click)="preventClose($event)">
+            <ul (click)="preventClose($event)">
                 <li>
                     <a id="item" routerLink="/dashboard" routerLinkActive="active-tab" class="nav-link text-name">Dashboard</a>
                 </li>
@@ -29,17 +29,18 @@
             <div class="header-right">
                 <input type="text" class="search-bar" placeholder="Search...">
                 <div class="profile-dropdown">
-                    <button class="profile-btn">
+                    <button class="profile-btn" (click)="toggleDropdown()">
                         <icon-svg [path]="'User2'" [size]="'2x'" [color]="'gray'"></icon-svg>
                         <!-- <span class="profile-name">Username</span> -->
                     </button>
-                    <div class="dropdown-content">
+                    <div class="dropdown-content" [ngClass]="{'active': isDropdownOpen}">
                         <a href="#">Profile</a>
                         <!-- <a (click)="onSetting()">Settings</a> -->
-                         <a [routerLink]="['/about/setting']">Setting</a>
+                        <a [routerLink]="['/about/setting']">Setting</a>
                         <a href="#">Logout</a>
                     </div>
                 </div>
+                
             </div>
         </div>
         <section class="content">
