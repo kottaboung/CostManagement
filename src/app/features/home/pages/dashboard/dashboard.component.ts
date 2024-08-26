@@ -1,5 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { mockData } from '../../mockup-date';
+import { mockProjects } from '../../mockup-data';
 import { LoadingService } from '../../../../shared/services/loading.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChartDetailComponent } from '../../modals/chart-detail/chart-detail.component';
@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit{
   updateChartData(year: number) {
     this.loadingService.showLoading();
     setTimeout (() => {
-      this.chartData = mockData.find(data => data.year === year);
+      this.chartData = mockProjects.find(data => data.createdDate === new Date);
       this.loadingService.hideLoading();
       },300
     );

@@ -1,0 +1,30 @@
+<ngx-datatable
+  class="material"
+  [rows]="rows"
+  [columns]="columns"
+  [headerHeight]="50"
+  [footerHeight]="50"
+  [rowHeight]="'auto'"
+  [columnMode]="'standard'"
+>
+  <ngx-datatable-column
+    *ngFor="let col of columns"
+    [name]="col.title"
+    [prop]="col.prop"
+    [sortable]="col.sortable"
+    [width]="col.width"
+    
+  >
+    <ng-template ngx-datatable-cell-template let-value="value">
+      <ng-container *ngIf="col.prop === 'detail'">
+        <button (click)="onDetailClick(value)">Details</button>
+      </ng-container>
+      <ng-container *ngIf="col.prop === 'createdDate'">
+        {{ value | date:'shortDate' }}
+      </ng-container>
+      <ng-container *ngIf="col.prop !== 'detail' && col.prop !== 'createdDate'">
+        {{ value }}
+      </ng-container>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>

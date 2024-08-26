@@ -11,6 +11,8 @@ import { ChartComponent } from './components/chart/chart.component';
 import { LoadingModalComponent } from './modals/loading-modal/loading-modal.component';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { LoadingService } from "./services/loading.service";
+import { TableComponent } from './components/table/table.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 
 @NgModule({
@@ -20,6 +22,7 @@ import { LoadingService } from "./services/loading.service";
         IconSizePipe,
         ChartComponent,
         LoadingModalComponent,
+        TableComponent,
     ],
     imports:[
         CommonModule,
@@ -28,6 +31,7 @@ import { LoadingService } from "./services/loading.service";
         NgxMaskDirective,
         NgxMaskPipe,
         NgbModule,
+        NgxDatatableModule,
         NgxEchartsModule.forRoot({
             echarts: () => import('echarts')
           }),
@@ -39,6 +43,7 @@ import { LoadingService } from "./services/loading.service";
         IconColorPipe,
         ChartComponent,
         LoadingModalComponent,
+        TableComponent
     ],
     providers:[
         provideNgxMask(),

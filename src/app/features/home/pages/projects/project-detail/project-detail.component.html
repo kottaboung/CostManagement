@@ -1,0 +1,12 @@
+<div *ngIf="project">
+  <div class="header">
+    <h2>Project Detail</h2>
+    <button type="button" class="btn btn-danger" (click)="onBackToProjects()">Back</button>
+  </div>
+  
+  <p><strong>Name:</strong> {{ project.name }}</p>
+  <p><strong>Cost:</strong> {{ project.cost | currency }}</p>
+  <p><strong>Created Date:</strong> {{ project.createdDate | date:'shortDate' }}</p>
+  <p><strong>Status:</strong> {{ project.status }}</p>
+  <!-- Add more details as needed -->
+</div>
