@@ -3,7 +3,7 @@
   <mat-dialog-content>
     <ul class="list" >
       <li class="display-text" *ngFor="let project of data.projects">
-        {{ project.projectName }}: {{ project.cost | currency }}
+        {{ project.name }}: {{ project.cost | currency }}
       </li>
     </ul>
   </mat-dialog-content>

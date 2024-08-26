@@ -1,1 +1,15 @@
-<p>projects works!</p>
+<div *ngIf="currentStep === 1">
+    <app-table
+      [rows]="rows"
+      [columns]="columns"
+      (detailClick)="onDetailClick($event)">
+    </app-table>
+  </div>
+  
+  <div *ngIf="currentStep === 2">
+    <div>
+        <button (click)="onBackToProjects()">Back</button>
+        <app-project-detail [Project]="Project"></app-project-detail>
+    </div>
+  </div>
+  

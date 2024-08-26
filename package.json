@@ -25,6 +25,7 @@
     "@angular/ssr": "^18.1.4",
     "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "@popperjs/core": "^2.11.8",
+    "@swimlane/ngx-datatable": "^20.1.0",
     "bootstrap": "^5.3.3",
     "echarts": "^5.5.1",
     "express": "^4.18.2",

@@ -10,6 +10,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ChartDetailComponent } from './modals/chart-detail/chart-detail.component';
 import { MatDialogModule } from "@angular/material/dialog";
+import { ProjectDetailComponent } from './pages/projects/project-detail/project-detail.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { MatDialogModule } from "@angular/material/dialog";
     ProjectsComponent,
     UserComponent,
     ChartDetailComponent,
+    ProjectDetailComponent,
     ],
     imports: [
     CommonModule,
