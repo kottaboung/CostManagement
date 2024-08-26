@@ -1,12 +1,19 @@
-<div *ngIf="project">
-  <div class="header">
+<div *ngIf="project" class="container">
+  <div class="header mb-3 d-flex justify-content-between align-items-center">
     <h2>Project Detail</h2>
     <button type="button" class="btn btn-danger" (click)="onBackToProjects()">Back</button>
   </div>
   
-  <p><strong>Name:</strong> {{ project.name }}</p>
-  <p><strong>Cost:</strong> {{ project.cost | currency }}</p>
-  <p><strong>Created Date:</strong> {{ project.createdDate | date:'shortDate' }}</p>
-  <p><strong>Status:</strong> {{ project.status }}</p>
-  <!-- Add more details as needed -->
+  <div class="row g-3">
+    <ng-container *ngFor="let detail of projectDetails">
+      <div class="col-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ detail.label }}</h5>
+            <p class="card-text">{{ detail.value }}</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </div>

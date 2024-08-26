@@ -29,6 +29,7 @@ import { ProjectDetailComponent } from './pages/projects/project-detail/project-
     HomeRoutingModule,
     SharedModule,
     NgbModule,
+    
     MatDialogModule
 ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

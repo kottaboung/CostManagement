@@ -14,6 +14,12 @@
       status: 'active'
     },
     {
+      name: 'Project Tester',
+      cost: 600000,
+      createdDate: new Date('2023-07-15'),
+      status: 'done'
+    },
+    {
       name: 'Project Beta',
       cost: 300000,
       createdDate: new Date('2024-03-22'),

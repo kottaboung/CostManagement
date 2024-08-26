@@ -1,5 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { Projects, mockProjects } from '../../mockup-data';
+import { LoadingService } from '../../../../shared/services/loading.service';
 
 @Component({
   selector: 'app-projects',
@@ -11,7 +12,7 @@ export class ProjectsComponent implements OnInit {
     { title: 'Project Name', prop: 'name', sortable: true, width: 300 },
     { title: 'Cost', prop: 'cost', sortable: true, width: 300 },
     { title: 'Created Date', prop: 'createdDate', sortable: true, width: 300 },
-    { title: 'Status', prop: 'status', sortable: true, width: 200 },
+    { title: 'Status', prop: 'status', sortable: false, width: 200 },
     { title: 'Detail', prop: 'detail', sortable: false, width: 100 }
   ];
 
@@ -19,9 +20,15 @@ export class ProjectsComponent implements OnInit {
   @Output() currentStep: number = 1; 
   Project: Projects | null = null;
 
-  constructor() {}
+  constructor(private loading : LoadingService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loading.showLoading();
+    setTimeout(() => {
+      this.loading.hideLoading();
+    }, 300);
+    
+  }
 
   onDetailClick(project: Projects): void {
     if (project && project.name) {
