@@ -15,4 +15,14 @@
 //       -webkit-mask-repeat: no-repeat;
     
 //   }
+
+:host {
+    display: inline-block;
+    width: 100%;  // Ensure this or another value is set correctly
+    height: 100%;
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+  }
+  
   

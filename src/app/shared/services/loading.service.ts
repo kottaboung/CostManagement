@@ -7,8 +7,10 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root'
 })
 export class LoadingService {
-  private modalRef: NgbModalRef | null = null;
 
+  private modalRef: NgbModalRef | null = null;
+  isLoading: boolean = false;
+  
   constructor(
     private modalService: NgbModal,
     @Inject(PLATFORM_ID) private platformId: Object
