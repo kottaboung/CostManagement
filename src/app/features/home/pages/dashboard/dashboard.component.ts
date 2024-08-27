@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { mockProjects } from '../../mockup-data';
 import { LoadingService } from '../../../../shared/services/loading.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,21 +25,32 @@ export class DashboardComponent implements OnInit{
   //   { title: 'Card 4', description: 'Description for Card 4' }
   // ];
 
+  isLoading: boolean = false;
+
   constructor(
     private loadingService: LoadingService,
     private dialog: MatDialog
   ){}
 
   ngOnInit() {
-    this.updateChartData(this.selectedYear);
+    this.loadingService.showLoading();
+    this.isLoading =true;
+    setTimeout(() => {
+      this.updateChartData(this.selectedYear);
+      this.loadingService.hideLoading();
+      this.isLoading = false;  
+    }, 1000);
+    
   }
 
   updateChartData(year: number) {
     this.loadingService.showLoading();
+    this.isLoading = true;
     setTimeout (() => {
       this.chartData = mockProjects.find(data => data.createdDate === new Date);
       this.loadingService.hideLoading();
-      },300
+      this.isLoading = false;
+      },1000
     );
   }
 
@@ -50,6 +61,7 @@ export class DashboardComponent implements OnInit{
   changeYear(year: number) {
     this.selectedYear = year;
     this.updateChartData(year);
+
   }
 
   // prevSlide(): void {

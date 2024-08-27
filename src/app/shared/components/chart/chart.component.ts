@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, Inject, Output, EventEmitter, output, Input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { EChartsOption } from 'echarts';
 import { mockProjects, Projects } from '../../../features/home/mockup-data';
@@ -14,6 +14,8 @@ export class ChartComponent implements OnInit {
   years: { year: number, label: string }[] = [];
   currentYear: number;
 
+  @Input() isloading: boolean = false;
+  
   @Output() chartItemClicked = new EventEmitter<any>();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
