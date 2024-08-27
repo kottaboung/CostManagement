@@ -23,3 +23,20 @@
       
     }
   }
+
+  .head-text {
+    a{
+      cursor: pointer;
+      font-size: large;
+    }
+
+    .underline {
+      text-decoration: underline;
+      color: #000000;
+    }
+
+    .none {
+      text-decoration: none;
+      color: #000000
+    }
+  }

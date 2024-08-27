@@ -11,7 +11,7 @@ export class ProjectDetailComponent implements OnInit {
   public project: Projects | undefined;
   @Input() currentStep = 2;
   public projectDetails: { label: string, value: string | number | any }[] = [];
-
+  public page = 1;
   constructor(private route: ActivatedRoute, private router: Router) { }
   
 
