@@ -5,6 +5,11 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+
+  .content-header {
+    display: flex;
+    justify-content: space-between;
+  }
   
   h1 {
     margin-bottom: 1rem;
@@ -25,18 +30,63 @@
   }
 
   .head-text {
-    a{
+    position: relative;
+    display: inline-block;
+  
+    a {
       cursor: pointer;
       font-size: large;
-    }
-
-    .underline {
-      text-decoration: underline;
+      position: relative;
       color: #000000;
+      text-decoration: none;
+      padding-bottom: 5px;
+      transition: color 0.3s ease;
+  
+      &.underline::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 2px;
+        width: 100%;
+        background-color: #000000;
+        transform-origin: left;
+        transition: transform 0.3s ease;
+        transform: scaleX(1);
+      }
+      
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 2px;
+        width: 100%;
+        background-color: #000000;
+        transform-origin: left;
+        transition: transform 0.3s ease;
+        transform: scaleX(0);
+      }
+  
+      &.underline::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  .page1, .page2 {
+    transition: transform 0.8s ease;
+    .card {
+      transition: transform 0.2s ease;
+    }
+  
+    .card:hover {
+      transform: scale(1.02);
     }
 
-    .none {
-      text-decoration: none;
-      color: #000000
-    }
+  }
+  
+
+  .space {
+    justify-content: space-between;
   }

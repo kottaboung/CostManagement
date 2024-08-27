@@ -11,6 +11,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ChartDetailComponent } from './modals/chart-detail/chart-detail.component';
 import { MatDialogModule } from "@angular/material/dialog";
 import { ProjectDetailComponent } from './pages/projects/project-detail/project-detail.component';
+import { ModuleTasksDetailComponent } from './pages/projects/project-detail/pages/module-tasks-detail/module-tasks-detail.component';
+import { EmployeesComponent } from './pages/projects/project-detail/pages/employees/employees.component';
 
 
 @NgModule({
@@ -21,6 +23,8 @@ import { ProjectDetailComponent } from './pages/projects/project-detail/project-
     UserComponent,
     ChartDetailComponent,
     ProjectDetailComponent,
+    ModuleTasksDetailComponent,
+    EmployeesComponent,
     ],
     imports: [
     CommonModule,

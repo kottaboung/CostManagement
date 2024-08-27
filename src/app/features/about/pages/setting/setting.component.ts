@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -9,12 +10,13 @@ import { Router } from '@angular/router';
 export class SettingComponent {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private location: Location
   ){
 
   }
 
-  GoHome() {
-    this.router.navigate(['home/dashboard']);
+  onBack() {
+    this.location.back();
   }
 }

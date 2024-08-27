@@ -1,16 +1,15 @@
 
-<div *ngIf="project" class="container mb-3">
-  <div class="d-flex gap-2 head-text">
-    <a (click)="page = 1" [ngClass]="{'underline' : page == 1, 'none' : page !== 1}" >OVerview</a>
-    <a (click)="page = 2" [ngClass]="{'underline' : page == 2, 'none' : page !== 2}" >Details</a>
-  </div>
+<div *ngIf="project && active" class="container mb-3">
+  <div class="d-flex gap-2 head-text mb-3">
+    <a (click)="page = 1" [ngClass]="{'underline' : page == 1}" >Overview</a>
+    <a (click)="page = 2" [ngClass]="{'underline' : page == 2}" >Details</a>
+    <button type="button" class="btn btn-danger mx-3" (click)="onBackToProjects()">Back</button>
+  </div>  
   
-  <div *ngIf="page == 1" class="page1">
+  <div *ngIf="page == 1" class="page1" >
     <div class="header mb-3 d-flex justify-content-between align-items-center">
     <h2>Project Overview</h2>
-    <button type="button" class="btn btn-danger" (click)="onBackToProjects()">Back</button>
   </div>
-  
   <div class="row g-3">
     <ng-container *ngFor="let detail of projectDetails">
       <div class="col-6">
@@ -25,26 +24,46 @@
   </div>
   </div>
 
-  <div *ngIf="page == 2" class="page1">
+  <div *ngIf="page == 2" class="page2" >
     <div class="header mb-3 d-flex justify-content-between align-items-center">
     <h2>Project Detail</h2>
-    <button type="button" class="btn btn-danger" (click)="onBackToProjects()">Back</button>
   </div>
-  
   <div class="row g-3">
-    <ng-container *ngFor="let detail of projectDetails">
-      <div class="col-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">{{ detail.label }}</h5>
-            <p class="card-text">{{ detail.value }}</p>
+    <ng-container>
+      <a [routerLink]="['module-tasks']" style="text-decoration: none;"  (click)="alert(1)">
+        <div class="col-12">
+          <div class="card h-100" style="cursor: pointer;">
+            <div class="card-body d-flex space">
+              <h5 class="card-title">Module and Tasks</h5>
+            </div>
           </div>
         </div>
-      </div>
+      </a>
+      <a [routerLink]="['employees']" style="text-decoration: none;" (click)="alert(2)">
+        <div class="col-12">
+          <div class="card h-100" style="cursor: pointer;">
+            <div class="card-body d-flex space">
+              <h5 class="card-title">Employees</h5>
+            </div>
+          </div>
+        </div>
+      </a>
     </ng-container>
   </div>
   </div>
   
+</div>
+
+<div class="container mb-3" *ngIf="!active">
+  <div class="d-flex content-header mb-3">
+    <div>
+     <h4> {{ pageName }} </h4>
+    </div>
+      <button type="button" class="btn btn-danger mx-3 " (click)="active = true">Back</button>
+  </div>
+  <div class="content" *ngIf="!active">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
 
