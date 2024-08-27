@@ -5,6 +5,9 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsComponent } from './pages/projects/projects.component';
 import { ProjectDetailComponent } from './pages/projects/project-detail/project-detail.component';
 import { UserComponent } from './pages/user/user.component';
+import { ModuleTasksDetailComponent } from './pages/projects/project-detail/pages/module-tasks-detail/module-tasks-detail.component';
+import { EmployeesComponent } from './pages/projects/project-detail/pages/employees/employees.component';
+import path from 'path';
 
 const routes: Routes = [
   {
@@ -22,6 +25,21 @@ const routes: Routes = [
       {
         path: 'projects/:name',
         component: ProjectDetailComponent,
+        children:[
+          {
+            path: 'module-tasks',
+            component: ModuleTasksDetailComponent
+          },
+          {
+            path: 'employees',
+            component: EmployeesComponent
+          },
+          // {
+          //   path: '',
+          //   redirectTo: 'module-tasks',
+          //   pathMatch: 'full'
+          // }
+        ]
       },
       {
         path: 'user',

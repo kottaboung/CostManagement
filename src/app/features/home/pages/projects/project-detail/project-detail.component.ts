@@ -1,21 +1,32 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Projects, mockProjects } from '../../../mockup-data';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { waitForAsync } from '@angular/core/testing';
 
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
-  styleUrls: ['./project-detail.component.scss']
+  styleUrls: ['./project-detail.component.scss'],
 })
 export class ProjectDetailComponent implements OnInit {
   public project: Projects | undefined;
   @Input() currentStep = 2;
   public projectDetails: { label: string, value: string | number | any }[] = [];
   public page = 1;
+  public pageName: string = ""
+  projectName: string | null = null; 
+
+  @Input() public active: boolean = true;
+
   constructor(private route: ActivatedRoute, private router: Router) { }
   
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.projectName = params.get('name');
+    });
+
     const name = this.route.snapshot.paramMap.get('name') ?? '';
     this.project = mockProjects.find(p => p.name === name);
 
@@ -46,5 +57,15 @@ export class ProjectDetailComponent implements OnInit {
   onBackToProjects(): void {
     this.currentStep = 1; 
     this.router.navigate(['/projects']);
+  }
+
+  alert(value:number) {
+    this.active = false;
+    if (value == 1) {
+      this.pageName = "Modules And Tasks"
+    }
+    if (value == 2) {
+      this.pageName = "Employees"
+    }
   }
 }
