@@ -1,7 +1,8 @@
-import { Component, OnInit, PLATFORM_ID, Inject, Output, EventEmitter, output, Input } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, Inject, Output, EventEmitter, Input } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { EChartsOption } from 'echarts';
 import { mockProjects, Projects } from '../../../features/home/mockup-data';
+import { calculateTotalCost } from '../../../features/home/mockup-service';  // Ensure the correct import path
 
 @Component({
   selector: 'app-chart',
@@ -107,7 +108,7 @@ export class ChartComponent implements OnInit {
       monthsInYear.forEach((month, index) => {
         if (projectYear < this.currentYear || (projectYear === this.currentYear && index >= projectMonthIndex)) {
           const monthData = monthMap.get(month)!;
-          monthData.totalCost += p.cost;
+          monthData.totalCost += p.cost || 0;  // Safeguard for undefined cost
           if (!monthData.projects.includes(p)) {
             monthData.projects.push(p);
           }
