@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Projects, mockProjects } from '../../../features/home/mockup-data';
+import { Module, Projects, mockProjects } from '../../../features/home/mockup-data';
 import { Router } from '@angular/router';
+import { TableType } from '../../../core/type/table-type';
 
 @Component({
   selector: 'app-table',
@@ -9,18 +10,36 @@ import { Router } from '@angular/router';
 })
 export class TableComponent implements OnInit {
 
-  @Input() rows: Projects[] = [];
+  @Input() rows: any[] = [];
   @Input() columns: any[] = [];
+  @Input() dataTable:TableType = 'projects';
+  @Input() projectName?: string;
 
   @Output() detailClick: EventEmitter<Projects> = new EventEmitter<Projects>();
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.rows = mockProjects.map(project => ({
-      ...project,
-      detail: project // Pass the full project object to the detail column
-    }));
+    if (this.dataTable === 'projects') {
+      this.rows = mockProjects.map(project => ({
+        ...project,
+        createdDate: new Date(project.createdDate),
+        detail: project
+      }));
+    } else if (this.dataTable === 'modules') {
+      this.rows = this.getModulesForProject().map(module => ({
+        ...module,
+        addDate: new Date(module.addDate),
+        dueDate: new Date(module.dueDate)
+      }));
+      console.log(this.rows); // Debugging: Check the date fields
+    }
+  }
+  
+
+  getModulesForProject(): Module[] {
+    const project = mockProjects.find(p => p.name === this.projectName);
+    return project ? project.modules : [];
   }
 
   onDetailClick(project: Projects): void {
