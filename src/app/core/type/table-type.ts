@@ -1,1 +1,1 @@
-export type TableType = 'projects' | 'modules';
+export type TableType = 'projects' | 'modules' | 'employees';

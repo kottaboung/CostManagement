@@ -23,7 +23,6 @@ export class ModuleTasksDetailComponent implements OnInit{
   ]
 
   constructor(private route: ActivatedRoute) {
-
   }
 
   ngOnInit(): void {
