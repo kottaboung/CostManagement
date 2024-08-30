@@ -37,8 +37,11 @@
         <ng-container *ngIf="col.prop !== 'addDate' && col.prop !== 'dueDate'">
           {{ value }}
         </ng-container>
-        <ng-container *ngIf="col.prop !== 'employees' ">
-          {{ !value }}
+      </ng-template>
+
+      <ng-template ngx-datatable-cell-template let-value="value" ngSwitchCase="employees">
+        <ng-container *ngIf="col.prop !== 'enCost' ">
+          {{ value }}
         </ng-container>
       </ng-template>
       

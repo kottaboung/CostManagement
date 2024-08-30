@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Module, Projects, mockProjects } from '../../../features/home/mockup-data';
 import { Router } from '@angular/router';
 import { TableType } from '../../../core/type/table-type';
+import { Employee } from './../../../features/home/mockup-data';
 
 @Component({
   selector: 'app-table',
@@ -32,14 +33,24 @@ export class TableComponent implements OnInit {
         addDate: new Date(module.addDate),
         dueDate: new Date(module.dueDate)
       }));
-      console.log(this.rows); // Debugging: Check the date fields
+      
+    } else if (this.dataTable === 'employees') {
+      this.rows = this.getEmployeesForProject().map(Employee => ({
+        ...Employee,
+      }))
     }
+    console.log(this.rows); // Debugging: Check the date fields
   }
   
 
   getModulesForProject(): Module[] {
     const project = mockProjects.find(p => p.name === this.projectName);
     return project ? project.modules : [];
+  }
+
+  getEmployeesForProject(): Employee[] {
+    const project = mockProjects.find(p => p.name === this.projectName);
+    return project ? project.employees : [];
   }
 
   onDetailClick(project: Projects): void {

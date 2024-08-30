@@ -39,7 +39,7 @@
           </div>
         </div>
       </a>
-      <a [routerLink]="['employees']" style="text-decoration: none;" (click)="alert(2)">
+      <a [routerLink]="['employees']" [queryParams]="{ project: projectName }" style="text-decoration: none;" (click)="alert(2)">
         <div class="col-12">
           <div class="card h-100" style="cursor: pointer;">
             <div class="card-body d-flex space">

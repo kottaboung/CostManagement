@@ -71,3 +71,13 @@ button:hover {
     display: block; /* Stack columns vertically */
   }
 }
+
+.ngx-datatable-cell-template {
+  margin-bottom: .3rem;
+  
+}
+
+datatable-header, .datatable-header {
+  border-bottom: 1.5px solid;
+  margin-bottom: .3rem;
+}
