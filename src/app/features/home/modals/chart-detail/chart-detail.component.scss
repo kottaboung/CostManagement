@@ -1,12 +1,21 @@
 .list {
-    list-style: none;
     padding: 0;
-    gap: 1rem;
+    list-style: none;
+    margin: 0;
+  }
+  
+  .list-item {
     display: flex;
-    flex-direction: column;
-}
-
-
-.display-text {
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .project-name {
     font-size: larger;
-}
+  }
+  
+  .project-cost {
+    color: #af4c4c;
+    font-size: large;
+  }

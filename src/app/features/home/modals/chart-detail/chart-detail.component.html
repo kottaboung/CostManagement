@@ -1,13 +1,12 @@
-
-  <h2 mat-dialog-title>{{ data.month }}</h2>
-  <mat-dialog-content>
-    <ul class="list" >
-      <li class="display-text" *ngFor="let project of data.projects">
-        {{ project.name }}: {{ project.cost | currency }}
-      </li>
-    </ul>
-  </mat-dialog-content>
-  <mat-dialog-actions>
-    <button class="btn btn-red " mat-button mat-dialog-close>Close</button>
-  </mat-dialog-actions>
-
+<h2 mat-dialog-title>Month: {{ data.month }}</h2>
+<mat-dialog-content >
+  <ul class="list">
+    <li class="list-item mb-3" *ngFor="let project of data.projects">
+      <div class="project-name">{{ project.name &nbsp;&nbsp; }}</div>
+      <div class="project-cost">{{ project.cost | currency:'THB':'symbol':'1.0-0'&nbsp; }}</div>
+    </li>
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button type="button" class="btn btn-danger" mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
