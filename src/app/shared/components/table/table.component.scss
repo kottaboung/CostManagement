@@ -15,6 +15,11 @@
   max-height: 80vh;
 }
 
+ngx-datatable-footer{
+  height: 0;
+  display: none;
+}
+
 ngx-datatable {
   width: 100%;
   min-width: 600px;
