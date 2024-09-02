@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/core/index.js';
+import dayGridPlugin from '@fullcalendar/daygrid'; // import dayGridPlugin
+import timeGridPlugin from '@fullcalendar/timegrid'; // import timeGridPlugin
+import listPlugin from '@fullcalendar/list'; // import listPlugin
 
 @Component({
   selector: 'app-callendar',
@@ -13,14 +16,13 @@ export class CallendarComponent implements OnInit {
 
   Options: CalendarOptions = {
     initialView: 'dayGridMonth',
+    plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
       left: 'prev,next,today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     events: [
-      // { title: 'Event 1', date: '2024-09-01' },
-      // { title: 'Event 2', date: '2024-09-02' }
     ],
     selectable: true,
     editable: true,
