@@ -6,6 +6,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeModule } from './features/home/home.module';
 import { AboutModule } from './features/about/about.module';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
+import { MyInterceptor } from './my-interceptor.interceptor';
+
 
 
 @NgModule({
@@ -15,12 +18,17 @@ import { AboutModule } from './features/about/about.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     NgbNavModule,
     NgbModule,
     HomeModule,
-    AboutModule
+    AboutModule,
   ],
-  providers: [
+  providers: [{
+    provide: HTTP_INTERCEPTORS, 
+      useClass: MyInterceptor, 
+      multi: true
+  }
    
   ],
   bootstrap: [AppComponent]

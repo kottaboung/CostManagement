@@ -13,6 +13,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { LoadingService } from "./services/loading.service";
 import { TableComponent } from './components/table/table.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { CallendarComponent } from './components/callendar/callendar.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 
 @NgModule({
@@ -23,6 +25,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
         ChartComponent,
         LoadingModalComponent,
         TableComponent,
+        CallendarComponent,
     ],
     imports:[
         CommonModule,
@@ -32,6 +35,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
         NgxMaskPipe,
         NgbModule,
         NgxDatatableModule,
+        FullCalendarModule,
         NgxEchartsModule.forRoot({
             echarts: () => import('echarts')
           }),
@@ -43,7 +47,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
         IconColorPipe,
         ChartComponent,
         LoadingModalComponent,
-        TableComponent
+        TableComponent,
+        CallendarComponent
     ],
     providers:[
         provideNgxMask(),
