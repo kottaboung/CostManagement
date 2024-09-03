@@ -1,4 +1,4 @@
-// home-service.ts
+
 import { Projects } from './mockup-data';
 
 export function calculateTotalCost(project: Projects): number {

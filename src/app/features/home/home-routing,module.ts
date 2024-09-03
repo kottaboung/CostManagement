@@ -7,7 +7,6 @@ import { ProjectDetailComponent } from './pages/projects/project-detail/project-
 import { UserComponent } from './pages/user/user.component';
 import { ModuleTasksDetailComponent } from './pages/projects/project-detail/pages/module-tasks-detail/module-tasks-detail.component';
 import { EmployeesComponent } from './pages/projects/project-detail/pages/employees/employees.component';
-import path from 'path';
 
 const routes: Routes = [
   {

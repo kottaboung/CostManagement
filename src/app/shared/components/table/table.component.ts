@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Module, Projects, mockProjects } from '../../../features/home/mockup-data';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Module, Projects, Employee } from '../../../features/home/mockup-data';
 import { TableType } from '../../../core/type/table-type';
-import { Employee } from './../../../features/home/mockup-data';
+import { mock } from '../../../core/type/mockData';
+import { catchError, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -11,53 +13,106 @@ import { Employee } from './../../../features/home/mockup-data';
 })
 export class TableComponent implements OnInit {
 
+  @Input() mockData: mock | string = 'mockData';
   @Input() rows: any[] = [];
   @Input() columns: any[] = [];
-  @Input() dataTable:TableType = 'projects';
+  @Input() dataTable: 'projects' | 'modules' | 'employees' = 'projects';
   @Input() projectName?: string;
-
   @Output() detailClick: EventEmitter<Projects> = new EventEmitter<Projects>();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
-    if (this.dataTable === 'projects') {
-      this.rows = mockProjects.map(project => ({
-        ...project,
-        createdDate: new Date(project.createdDate),
-        detail: project
-      }));
-    } else if (this.dataTable === 'modules') {
-      this.rows = this.getModulesForProject().map(module => ({
-        ...module,
-        addDate: new Date(module.addDate),
-        dueDate: new Date(module.dueDate)
-      }));
-      
-    } else if (this.dataTable === 'employees') {
-      this.rows = this.getEmployeesForProject().map(Employee => ({
-        ...Employee,
-      }))
+    if (!this.projectName && this.dataTable !== 'projects') {
+      this.projectName = this.rows.length > 0 ? this.rows[0].name : undefined;
     }
-    console.log(this.rows); // Debugging: Check the date fields
+    this.loadEvent().subscribe({
+      next: (data) => {
+        this.rows = data;
+        console.log('Loaded rows:', this.rows);
+      },
+      error: (error) => {
+        console.error('Error loading data:', error);
+      }
+    });
+  }
+  
+  loadEvent(): Observable<any[]> {
+    if (!this.mockData) {
+      console.warn('No mockData provided!');
+      return of([]);
+    }
+  
+    const url = `assets/mockdata/${this.mockData}.json`;
+  
+    return this.http.get<any[]>(url).pipe(
+      map((data) => {
+        console.log('Data received:', data); // Debugging line
+        if (this.dataTable === 'projects') {
+          return data.map((project: Projects) => ({
+            ...project,
+            createdDate: new Date(project.createdDate),
+            detail: project
+          }));
+        } else if (this.dataTable === 'modules') {
+          return this.getModulesForProject(data).map((module: Module) => ({
+            ...module,
+            addDate: new Date(module.addDate),
+            dueDate: new Date(module.dueDate)
+          }));
+        } else if (this.dataTable === 'employees') {
+          return this.getEmployeesForProject(data).map((employee: Employee) => ({
+            ...employee
+          }));
+        }
+        return [];
+      }),
+      catchError((error) => {
+        console.error('Error loading data:', error);
+        return of([]);
+      })
+    );
+  }
+  
+  
+
+  getModulesForProject(data: any[]): Module[] {
+    if (!this.projectName) {
+      console.warn('projectName is undefined!');
+      return [];
+    }
+    const project = data.find(p => p.name === this.projectName);
+    if (!project) {
+      console.warn(`Project with name ${this.projectName} not found!`);
+      return [];
+    }
+    return project.modules || [];
+  }
+  
+  getEmployeesForProject(data: any[]): Employee[] {
+    if (!this.projectName) {
+      console.warn('projectName is undefined!');
+      return [];
+    }
+    const project = data.find(p => p.name === this.projectName);
+    if (!project) {
+      console.warn(`Project with name ${this.projectName} not found!`);
+      return [];
+    }
+    return project.employees || [];
   }
   
 
-  getModulesForProject(): Module[] {
-    const project = mockProjects.find(p => p.name === this.projectName);
-    return project ? project.modules : [];
-  }
-
-  getEmployeesForProject(): Employee[] {
-    const project = mockProjects.find(p => p.name === this.projectName);
-    return project ? project.employees : [];
-  }
-
-  onDetailClick(project: Projects): void {
-    if (project && project.name) {
-      this.router.navigate(['/home/projects', project.name]); // Navigate to detail view
+  onDetailClick(row: Projects): void {
+    console.log('Row clicked:', row); // Debugging line
+    
+    if (row && row.name) {
+      console.log('Navigating to:', `/projects/${row.name}`);
+      this.router.navigate([`/projects/${row.name}`]);
     } else {
-      console.error('Project is undefined or project name is empty');
+      console.error('Row or row name is undefined', row);
     }
   }
+  
+  
 }
