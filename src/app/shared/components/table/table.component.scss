@@ -1,83 +1,79 @@
-/* table.component.scss */
-:host {
+// Ensure table container takes full width
+ngx-datatable {
   display: block;
-  padding: 1rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.table-container {
   width: 100%;
-  overflow-x: auto; /* Enable horizontal scrolling */
-  margin: 0;
-  position: relative;
-  max-height: 80vh;
 }
 
-ngx-datatable-footer{
-  height: 0;
+// Header styles
+.datatable-header {
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+// Footer styles
+.datatable-footer {
+  background-color: #f5f5f5;
+  color: #333;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+ngx-datatable-footer {
   display: none;
 }
 
-ngx-datatable {
+// Body styles to ensure rows and columns stretch
+.datatable-body {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  min-width: 600px;
-  box-sizing: border-box;
-  overflow-x: auto;
 }
 
-ngx-datatable .datatable-header {
-  background-color: #007bff;
-  color: #fff;
-  font-weight: bold;
+.datatable-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  &:nth-child(odd) {
+    background-color: #fafafa;
+  }
   
+  &:nth-child(even) {
+    background-color: #ffffff;
+  }
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
 }
 
-ngx-datatable .datatable-footer {
-  background-color: #f1f1f1;
-}
-
-ngx-datatable .datatable-body {
-  background-color: #fff;
-  margin-bottom: 1rem;
-}
-
-ngx-datatable-column {
+// Cell styles to ensure cells stretch within the row
+.datatable-cell {
+  padding: 10px;
   text-align: left;
+  flex: 1; // Allows cells to take up equal space in the row
+
+  // Apply specific styles for different columns
+  &.detail {
+    text-align: center;
+  }
 }
 
-button {
+// Button styles
+.btn-primary {
   background-color: #007bff;
-  color: #fff;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  color: white;
+  padding: 5px 10px;
   cursor: pointer;
-  margin-bottom: 1rem;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-@media (max-width: 768px) {
-  ngx-datatable {
-    font-size: 0.875rem;
-  }
-
-  ngx-datatable-column {
-    width: auto; /* Adjust column width */
-    display: block; /* Stack columns vertically */
-  }
-}
-
-.ngx-datatable-cell-template {
-  margin-bottom: .3rem;
   
-}
-
-datatable-header, .datatable-header {
-  border-bottom: 1.5px solid;
-  margin-bottom: .3rem;
+  &:hover {
+    background-color: #0056b3;
+  }
 }

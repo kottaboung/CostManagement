@@ -55,11 +55,16 @@ export class TableComponent implements OnInit {
             detail: project
           }));
         } else if (this.dataTable === 'modules') {
-          return this.getModulesForProject(data).map((module: Module) => ({
-            ...module,
-            addDate: new Date(module.addDate),
-            dueDate: new Date(module.dueDate)
-          }));
+          return this.getModulesForProject(data).map((module: Module) => {
+            const manday = this.calculateMandays(module);
+            return {
+              ...module,
+              addDate: new Date(module.addDate),
+              dueDate: new Date(module.dueDate),
+              manday: manday,
+              mCost: this.calculateModuleCost(module, manday) // Calculate mCost
+            };
+          });
         } else if (this.dataTable === 'employees') {
           return this.getEmployeesForProject(data).map((employee: Employee) => ({
             ...employee
@@ -74,7 +79,18 @@ export class TableComponent implements OnInit {
     );
   }
   
-  
+  calculateMandays(module: Module): number {
+    const startDate = new Date(module.addDate);
+    const dueDate = new Date(module.dueDate);
+    const diffTime = Math.abs(dueDate.getTime() - startDate.getTime());
+    const mandays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    return mandays;
+  }
+
+  calculateModuleCost(module: Module, manday: number): number {
+    const totalEmployeeCost = module.employees.reduce((sum, employee) => sum + employee.emCost, 0);
+    return totalEmployeeCost * manday;
+  }
 
   getModulesForProject(data: any[]): Module[] {
     if (!this.projectName) {

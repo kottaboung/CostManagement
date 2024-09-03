@@ -11,7 +11,7 @@ import { calculateTotalCost } from '../../mockup-service';
 })
 export class ProjectsComponent implements OnInit {
   columns = [
-    { title: 'Project Name', prop: 'name', sortable: true, width: 300 },
+    { title: 'Project Name', prop: 'name', sortable: true, width: 500 },
     { title: 'Cost', prop: 'cost', sortable: true, width: 300 },
     { title: 'Created Date', prop: 'createdDate', sortable: true, width: 300 },
     { title: 'Status', prop: 'status', sortable: false, width: 200 },
