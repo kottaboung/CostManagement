@@ -13,11 +13,12 @@ export class ModuleTasksDetailComponent implements OnInit{
   projectName: string = '';
   public row: Module[] = [];
   public columns: any[] = [
-    { title: 'Module Name', prop: 'moduleName', sortable: true, width: 300 },
-    { title: 'Created Date', prop: 'addDate', sortable: true, width: 200 },
-    { title: 'Due Date', prop: 'dueDate', sortable: true, width: 200 },
-    { title: 'Manday', prop: 'manday', sortable: true, width: 150 },
-    { title: 'Status', prop: 'active', sortable: false, width: 150 },
+    { title: 'Module Name', prop: 'moduleName', sortable: true, width: 400 },
+    { title: 'Created Date', prop: 'addDate', sortable: true, width: 250 },
+    { title: 'Due Date', prop: 'dueDate', sortable: true, width: 250 },
+    { title: 'Manday', prop: 'manday', sortable: true, width: 200 },
+    { title: 'Cost', prop: 'mCost', sortable: true, width: 300 },
+    { title: 'Status', prop: 'active', sortable: false, width: 200 },
   ];
 
   constructor(private route: ActivatedRoute, private http: HttpClient) { }

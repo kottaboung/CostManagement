@@ -5,7 +5,8 @@
   [headerHeight]="50"
   [footerHeight]="50"
   [rowHeight]="'auto'"
-  [columnMode]="'standard'"
+  [columnMode]="'force'"
+  [draggable]="'false'"
 >
   <ngx-datatable-column
     *ngFor="let col of columns"
@@ -17,13 +18,16 @@
     <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
       <ng-container [ngSwitch]="dataTable">
         <ng-container *ngSwitchCase="'projects'">
-          <ng-container *ngIf="col.prop === 'detail'">
-            <button (click)="onDetailClick(row)">Details</button>
+          <ng-container  *ngIf="col.prop === 'detail'">
+            <button type="button" class="btn btn-primary" (click)="onDetailClick(row)">Details</button>
           </ng-container>
           <ng-container *ngIf="col.prop === 'createdDate'">
             {{ value | date:'shortDate' }}
           </ng-container>
-          <ng-container *ngIf="col.prop !== 'detail' && col.prop !== 'createdDate'">
+          <ng-container *ngIf="col.prop === 'cost'">
+            {{ value | number }} THB
+          </ng-container>
+          <ng-container *ngIf="col.prop !== 'detail' && col.prop !== 'createdDate' && col.prop !== 'cost'">
             {{ value }}
           </ng-container>
         </ng-container>
@@ -34,7 +38,13 @@
           <ng-container *ngIf="col.prop === 'dueDate'">
             {{ value | date:'shortDate' }}
           </ng-container>
-          <ng-container *ngIf="col.prop !== 'addDate' && col.prop !== 'dueDate'">
+          <ng-container *ngIf="col.prop === 'manday'">
+            {{ value }} days
+          </ng-container>
+          <ng-container *ngIf="col.prop === 'mCost'">
+            {{ value | number }} THB
+          </ng-container>
+          <ng-container *ngIf="col.prop !== 'addDate' && col.prop !== 'dueDate' && col.prop !== 'manday' && col.prop !== 'mCost'">
             {{ value }}
           </ng-container>
         </ng-container>

@@ -11,6 +11,7 @@ export interface Module {
   dueDate: Date;
   active: boolean;
   manday: number;
+  mCost?: number;
   employees: Employee[];
 }
 
