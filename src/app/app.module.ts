@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { HomeModule } from './features/home/home.module';
 import { AboutModule } from './features/about/about.module';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
+import { AppComponent } from './app.component';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
 import { MyInterceptor } from './my-interceptor.interceptor';
-
-
+import { HomeModule } from './features/home/home.module';
 
 @NgModule({
   declarations: [
@@ -18,18 +15,18 @@ import { MyInterceptor } from './my-interceptor.interceptor';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
-    NgbNavModule,
     NgbModule,
-    HomeModule,
+    NgbNavModule,
     AboutModule,
+    HomeModule,
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS, 
-      useClass: MyInterceptor, 
+  providers: [
+    provideHttpClient(withFetch()), // Configures the HTTP client
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MyInterceptor,
       multi: true
-  }
-   
+    }
   ],
   bootstrap: [AppComponent]
 })

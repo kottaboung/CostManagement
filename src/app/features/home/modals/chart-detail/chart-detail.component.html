@@ -1,9 +1,9 @@
 <h2 mat-dialog-title>Month: {{ data.month }}</h2>
-<mat-dialog-content >
+<mat-dialog-content>
   <ul class="list">
     <li class="list-item mb-3" *ngFor="let project of data.projects">
-      <div class="project-name">{{ project.name &nbsp;&nbsp; }}</div>
-      <div class="project-cost">{{ project.cost | currency:'THB':'symbol':'1.0-0'&nbsp; }}</div>
+      <div class="project-name">{{ project.name }}</div>
+      <div class="project-cost">{{ project.cost| currency:'THB':'symbol':'1.0-0' }}</div>
     </li>
   </ul>
 </mat-dialog-content>

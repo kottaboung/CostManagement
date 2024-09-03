@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { CalendarOptions } from '@fullcalendar/core/index.js';
+import { Component, Input, OnInit } from '@angular/core';
+import { CalendarOptions, EventInput } from '@fullcalendar/core/index.js';
 import dayGridPlugin from '@fullcalendar/daygrid'; // import dayGridPlugin
 import timeGridPlugin from '@fullcalendar/timegrid'; // import timeGridPlugin
 import listPlugin from '@fullcalendar/list'; // import listPlugin
+import interactionPlugin from '@fullcalendar/interaction'
+import { mock } from '../../../core/type/mockData';
 
 @Component({
   selector: 'app-callendar',
@@ -12,11 +14,13 @@ import listPlugin from '@fullcalendar/list'; // import listPlugin
 })
 export class CallendarComponent implements OnInit {
 
+  @Input() mockData:string | mock ='mockEvents';
+
   constructor(private http: HttpClient) {}
 
   Options: CalendarOptions = {
     initialView: 'dayGridMonth',
-    plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
       left: 'prev,next,today',
       center: 'title',
@@ -26,19 +30,29 @@ export class CallendarComponent implements OnInit {
     ],
     selectable: true,
     editable: true,
+    weekends:true,
     eventClick: this.handleEventClick.bind(this)
   };
+  eventsPromise: Promise<EventInput[]> | undefined;
   
   ngOnInit(): void {
       this.loadEvent();
   }
 
   loadEvent(): void{
-    this.http.get('../assets/mockdata/mockEvents.json').subscribe(
-      (events: any) => {
-        this.Options.events = events
-      }
-    );
+    if (this.mockData) {
+      const url = `assets/mockdata/${this.mockData}.json`;
+      this.http.get(url).subscribe(
+        (events: any) => {
+          this.Options.events = events;
+        },
+        error => {
+          console.error('Error loading events:', error);
+        }
+      );
+    } else {
+      console.warn('No mockData provided!');
+    }
   }
 
   handleEventClick(arg: any) {

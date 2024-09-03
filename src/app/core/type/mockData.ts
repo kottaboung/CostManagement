@@ -1,0 +1,1 @@
+export type mock = 'mockEvents' | 'mockData'

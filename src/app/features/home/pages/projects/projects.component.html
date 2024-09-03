@@ -1,16 +1,15 @@
 <div *ngIf="currentStep === 1">
-    <app-table
-      [rows]="rows"
-      [columns]="columns"
-      [dataTable]="'projects'"
-      (detailClick)="onDetailClick($event)">
-    </app-table>
+  <app-table
+    [rows]="rows"
+    [columns]="columns"
+    [dataTable]="'projects'"
+    (detailClick)="onDetailClick($event)">
+  </app-table>
+</div>
+
+<div *ngIf="currentStep === 2">
+  <div>
+    <button class="btn btn-danger mb-3" (click)="onBackToProjects()">Back</button>
+    <app-project-detail [Project]="Project"></app-project-detail>
   </div>
-  
-  <div *ngIf="currentStep === 2">
-    <div>
-        <button (click)="onBackToProjects()">Back</button>
-        <app-project-detail [Project]="Project"></app-project-detail>
-    </div>
-  </div>
-  
+</div>

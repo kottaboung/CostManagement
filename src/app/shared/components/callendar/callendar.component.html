@@ -1,3 +1,6 @@
 <div class="canllendar-container"> 
-    <full-calendar [options]="Options"></full-calendar>
+    <full-calendar 
+    [options]="Options"
+    [events]="eventsPromise | async"
+    ></full-calendar>
 </div>
