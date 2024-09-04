@@ -10,8 +10,12 @@
           "dueDate": "2023-05-01T00:00:00Z",
           "active": true,
           "employees": [
-            { "emName": "Alice", "emCost": 20000 },
-            { "emName": "Bob", "emCost": 15000 }
+            { "id": 1, "emName": "Alice", "emCost": 20000, "possition": "Developer" },
+            { "id": 2, "emName": "Bob", "emCost": 15000, "possition": "Developer" }
+          ],
+          "mockEvents": [
+            { "title": "Event 1", "descript": "making something", "date": "2023-02-01", "employeeId": 1 },
+            { "title": "Event 2", "descript": "making something", "date": "2023-05-01", "employeeId": 2 }
           ]
         },
         {
@@ -20,17 +24,14 @@
           "dueDate": "2023-06-01T00:00:00Z",
           "active": false,
           "employees": [
-            { "emName": "Charlie", "emCost": 30000 }
+            { "id": 3, "emName": "Charlie", "emCost": 30000, "possition": "Developer" }
+          ],
+          "mockEvents": [
+            { "title": "Event 3", "date": "2023-06-01", "descript": "making something", "employeeId": 3 }
           ]
         }
       ],
-      "employees": [
-        { "emName": "Alice", "emCost": 20000 },
-        { "emName": "Bob", "emCost": 15000 },
-        { "emName": "Charlie", "emCost": 30000 }
-      ],
-      "cost": 0,
-      "mockEvents": []
+      "cost": 0
     },
     {
       "name": "Project Tester",
@@ -43,17 +44,17 @@
           "dueDate": "2023-12-01T00:00:00Z",
           "active": true,
           "employees": [
-            { "emName": "David", "emCost": 40000 },
-            { "emName": "Eva", "emCost": 25000 }
+            { "id": 1, "emName": "David", "emCost": 40000, "possition": "Developer" },
+            { "id": 2, "emName": "Eva", "emCost": 25000, "possition": "Developer" }
+          ],
+          "mockEvents": [
+            { "title": "Event 4", "date": "2023-08-01", "descript": "making something", "employeeId": 1 },
+            { "title": "Event 5", "date": "2023-012-01", "descript": "making something", "employeeId": 2 }
           ]
         }
       ],
-      "employees": [
-        { "emName": "David", "emCost": 40000 },
-        { "emName": "Eva", "emCost": 25000 }
-      ],
-      "cost": 0,
-      "mockEvents": []
+      
+      "cost": 0
     },
     {
       "name": "Project Beta",
@@ -66,15 +67,16 @@
           "dueDate": "2024-07-01T00:00:00Z",
           "active": true,
           "employees": [
-            { "emName": "Frank", "emCost": 15000 }
+            { "id": 1, "emName": "Frank", "emCost": 15000, "possition": "Developer" }
+          ],
+          "mockEvents": [
+            { "title": "Event 6", "date": "2024-05-01", "descript": "making something", "employeeId": 1 },
+            { "title": "Event 7", "date": "2024-07-01", "descript": "making something", "employeeId": 1 }
           ]
         }
       ],
-      "employees": [
-        { "emName": "Frank", "emCost": 15000 }
-      ],
-      "cost": 0,
-      "mockEvents": []
+      
+      "cost": 0
     }
   ]
   

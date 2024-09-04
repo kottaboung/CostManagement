@@ -1,6 +1,41 @@
-<div class="canllendar-container"> 
-    <full-calendar 
-    [options]="Options"
-    [events]="eventsPromise | async"
-    ></full-calendar>
-</div>
+<div class="container">
+    <div class="row">
+      <!-- Employees Column -->
+      <div class="col-3 bg-light">
+        <div class="p-4">
+          <h5></h5>
+        </div>
+        <div class="p-3">
+          <ul class="list-group scroll">
+            <!-- Display employees -->
+            <li *ngFor="let employee of employees" class="list-group-item">
+              <p>
+                {{ employee.emName }} &nbsp; {{ employee.possition }}<br>
+                {{ employee.emCost | number }} THB per day
+              </p>
+              <ul class="list-group mt-2">
+                <!-- Display events for each employee -->
+                <li *ngFor="let event of employeeEvents[employee.id] || []" 
+                    class="list-group-item"
+                    style="cursor: pointer;" 
+                    (click)="scrollToEvent(event.id)">
+                  <p>
+                    <strong>Event:</strong> {{ event.title }}<br>
+                    <strong>Description:</strong> {{ event.extendedProps?.['descript'] || 'No description available' }}<br>                    
+                  </p>                      
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Calendar Column -->
+      <div class="col-9">
+        <div class="p-3">
+          <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+  

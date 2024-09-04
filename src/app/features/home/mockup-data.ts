@@ -1,8 +1,9 @@
-import { calculateTotalCost } from "./mockup-service";
 
 export interface Employee {
+  id: number; 
   emName: string;
   emCost: number;
+  possition: string;
 }
 
 export interface Module {
@@ -13,6 +14,7 @@ export interface Module {
   manday: number;
   mCost?: number;
   employees: Employee[];
+  mockEvents: Events[];
 }
 
 export interface Projects {
@@ -25,6 +27,9 @@ export interface Projects {
   detail: any
 }
 
-// mockProjects.forEach(project => {
-//   project.cost = calculateTotalCost(project);
-// });
+export interface Events {
+  title: string;
+  descript?: string;
+  date: Date;
+  employeeId?: number;
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit, PLATFORM_ID, Inject, Output, EventEmitter, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { EChartsOption } from 'echarts';
-import { Projects } from '../../../features/home/mockup-data';
+import { Module, Projects } from '../../../features/home/mockup-data';
 import { map, take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { MockService } from '../../services/mock-service.service';
@@ -84,32 +84,31 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   initializeChart(year: number): void {
     if (!this.isBrowser) return;
-  
+
     const chartElement = document.getElementById('chart') as HTMLElement;
-  
+
     if (!chartElement) {
       console.error('Chart DOM element not found');
       return;
     }
-  
-    // Dispose of existing chart instance if it exists
+
     if (this.chart) {
       this.chart.dispose();
     }
-  
+
     this.chart = echarts.init(chartElement);
-  
+
     this.projectService.getMockProjects().pipe(
       map(projects => projects.map(p => ({
         ...p,
         createdDate: typeof p.createdDate === 'string' ? new Date(p.createdDate) : p.createdDate,
-        cost: p.cost || this.calculateTotalCost(p)  // Ensure cost is calculated if not provided
+        cost: p.cost || this.calculateTotalCost(p) // Use recalculated cost
       })))
     ).subscribe(projects => {
       const filteredProjects = projects.filter(p => (p.createdDate as Date).getFullYear() === year || (p.createdDate as Date).getFullYear() === year - 1);
       const monthsInYear = this.getMonthsInYear(year);
       const monthData = this.getMonthData(filteredProjects, monthsInYear);
-  
+
       this.chartOption = {
         xAxis: {
           type: 'category',
@@ -119,7 +118,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
           type: 'value'
         },
         series: [{
-          data: monthData.map(d => d.totalCost),
+          data: monthData.map(d => d.totalCost || 0),
           type: 'bar',
           itemStyle: { color: '#42A5F5' }
         }],
@@ -127,33 +126,49 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
           formatter: (params: any) => {
             const month = monthData.find(d => d.month === params.name);
             if (month) {
-              // Calculate the total cost for the month
-              const totalCost = month.projects.reduce((sum, project) => sum + (project.cost ?? 0), 0);
-              return `Total Cost: ${totalCost}<br>${month.projects.map(p => `${p.name}: ${p.cost || 0}`).join('<br>')}`;
+              const totalCost = month.projects.reduce((sum, project) => sum + (project.cost || 0), 0);
+              return `Total Cost: ${totalCost} THB<br>${month.projects.map(p => `${p.name}: ${p.cost || 0} THB`).join('<br>')}`;
             }
             return '';
           },
           trigger: 'axis',
         }
       };
-  
-      // Set the chart option after initializing
+
       this.chart?.setOption(this.chartOption);
       this.chart?.on('click', (params) => {
         this.onChartClick(params);
       });
     });
   }
-  
+
+  calculateMandays(module: Module): number {
+    const startDate = new Date(module.addDate);
+    const dueDate = new Date(module.dueDate);
+    const diffTime = Math.abs(dueDate.getTime() - startDate.getTime());
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  }
+
   calculateTotalCost(project: Projects): number {
-    const moduleCosts = project.modules.reduce((total, module) => {
-      return total + module.employees.reduce((moduleTotal, employee) => moduleTotal + employee.emCost, 0);
+    if (!project.modules) {
+      console.error(`Project: ${project.name}, modules data is missing`);
+      return 0;
+    }
+
+    const totalCost = project.modules.reduce((total, module) => {
+      if (!module.employees) {
+        console.error(`Module: ${module.moduleName}, employees data is missing`);
+        return total;
+      }
+
+      const mandays = this.calculateMandays(module);
+      const moduleCost = mandays * module.employees.reduce((moduleTotal, employee) => {
+        return moduleTotal + (employee.emCost || 0);
+      }, 0);
+
+      return total + moduleCost;
     }, 0);
 
-    const employeeCosts = project.employees.reduce((total, employee) => total + employee.emCost, 0);
-
-    const totalCost = moduleCosts + employeeCosts;
-    console.log(`Project: ${project.name}, Total Cost: ${totalCost}`);
     return totalCost;
   }
 
@@ -163,7 +178,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
     const currentMonthIndex = isCurrentYear ? new Date().getMonth() : 11;
 
     for (let month = 0; month <= currentMonthIndex; month++) {
-      months.push(this.getMonthName(month));  // Only push the month name
+      months.push(this.getMonthName(month)); 
     }
 
     return months;
@@ -178,37 +193,32 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getMonthData(projects: Projects[], monthsInYear: string[]): { month: string, totalCost: number, projects: Projects[] }[] {
     const monthMap = new Map<string, { totalCost: number, projects: Projects[] }>();
-  
-    // Initialize monthMap with zero cost for all months
+
     monthsInYear.forEach(month => {
       monthMap.set(month, { totalCost: 0, projects: [] });
     });
-  
-    // Iterate through each project and update the costs for the months
+
     projects.forEach(p => {
       const projectYear = p.createdDate.getFullYear();
       const projectMonthIndex = p.createdDate.getMonth();
-  
-      // Start accumulating costs from the project's created month to the end of the year
+
       monthsInYear.forEach((month, index) => {
         if (projectYear < this.currentYear || (projectYear === this.currentYear && index >= projectMonthIndex)) {
           const monthData = monthMap.get(month)!;
-          monthData.totalCost += p.cost ?? 0;  // Safeguard for undefined cost
+          monthData.totalCost += p.cost ?? 0;
           if (!monthData.projects.includes(p)) {
             monthData.projects.push(p);
           }
         }
       });
     });
-  
-    // Return the updated month data
-    return monthsInYear.map(month => ({
+
+    return Array.from(monthMap.entries()).map(([month, data]) => ({
       month,
-      ...monthMap.get(month)!
+      totalCost: data.totalCost,
+      projects: data.projects
     }));
   }
-  
-  
 
   setupRealTimeUpdates(): void {
     setInterval(() => {
@@ -218,17 +228,17 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onChartClick(event: any): void {
     const clickedMonth = event.name;
-  
+
     this.projectService.getMockProjects().pipe(
       map(projects => projects.map(p => ({
         ...p,
-        createdDate: new Date(p.createdDate) // Ensure createdDate is a Date object
+        createdDate: new Date(p.createdDate)
       }))),
       map(projects => {
         const monthsData = this.getMonthData(projects, this.getMonthsInYear(this.currentYear));
         return monthsData.map(month => ({
           ...month,
-          totalCost: month.projects.reduce((sum, p) => sum + (p.cost ?? 0), 0) 
+          totalCost: month.projects.reduce((sum, p) => sum + (p.cost ?? 0), 0)
         }));
       }),
       take(1)
@@ -236,12 +246,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
       const clickedMonthData = monthData.find(d => d.month === clickedMonth);
       if (clickedMonthData) {
         this.chartItemClicked.emit(clickedMonthData);
-        console.log(clickedMonthData);
       }
     });
   }
-  
-  
-
-  
 }
