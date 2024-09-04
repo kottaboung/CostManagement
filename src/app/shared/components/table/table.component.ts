@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Module, Projects, Employee } from '../../../features/home/mockup-data';
-import { TableType } from '../../../core/type/table-type';
 import { mock } from '../../../core/type/mockData';
 import { catchError, map, Observable, of } from 'rxjs';
 
