@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Projects } from '../../mockup-data';
+import { Projects } from '../../mockup-interface';
 import { calculateTotalCost } from '../../mockup-service';
 
 @Component({

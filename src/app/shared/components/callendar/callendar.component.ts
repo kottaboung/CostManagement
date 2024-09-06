@@ -5,7 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // import dayGridPlugin
 import timeGridPlugin from '@fullcalendar/timegrid'; // import timeGridPlugin
 import listPlugin from '@fullcalendar/list'; // import listPlugin
 import interactionPlugin from '@fullcalendar/interaction'
-import { Employee, Projects } from '../../../features/home/mockup-data';
+import { Employee, Projects } from '../../../features/home/mockup-interface';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({

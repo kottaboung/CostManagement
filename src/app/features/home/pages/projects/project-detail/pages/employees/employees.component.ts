@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Employee, Projects } from '../../../../../mockup-data';
+import { Employee, Projects } from '../../../../../mockup-interface';
 import { HttpClient } from '@angular/common/http';
 
 @Component({

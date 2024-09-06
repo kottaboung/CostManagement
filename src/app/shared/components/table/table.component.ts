@@ -1,16 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Module, Projects, Employee } from '../../../features/home/mockup-data';
+import { Module, Projects, Employee } from '../../../features/home/mockup-interface';
 import { mock } from '../../../core/type/mockData';
 import { catchError, map, Observable, of } from 'rxjs';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, AfterViewInit {
 
   @Input() mockData: mock | string = 'mockData';
   @Input() rows: any[] = [];
@@ -18,8 +19,14 @@ export class TableComponent implements OnInit {
   @Input() dataTable: 'projects' | 'modules' | 'employees' = 'projects';
   @Input() projectName?: string;
   @Output() detailClick: EventEmitter<Projects> = new EventEmitter<Projects>();
+  //@ViewChild(DatatableComponent) table: DatatableComponent;
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) { }
+
+  ngAfterViewInit(): void {
+      this.cdr.detectChanges();
+      //this.table.recalculate();
+  }
 
   ngOnInit(): void {
     if (!this.projectName && this.dataTable !== 'projects') {

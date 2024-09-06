@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Projects } from '../../features/home/mockup-data';
+import { Projects } from '../../features/home/mockup-interface';
 
 
 @Injectable({
