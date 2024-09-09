@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Module } from '../../../../../mockup-data';
+import { Module } from '../../../../../mockup-interface';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Projects } from '../../../mockup-data';
+import { Projects } from '../../../mockup-interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { calculateTotalCost } from '../../../mockup-service';

@@ -1,7 +1,7 @@
 import { Component, OnInit, PLATFORM_ID, Inject, Output, EventEmitter, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { EChartsOption } from 'echarts';
-import { Module, Projects } from '../../../features/home/mockup-data';
+import { Module, Projects } from '../../../features/home/mockup-interface';
 import { map, take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { MockService } from '../../services/mock-service.service';

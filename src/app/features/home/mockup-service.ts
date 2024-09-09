@@ -1,5 +1,5 @@
 
-import { Module, Projects } from './mockup-data';
+import { Module, Projects } from './mockup-interface';
 
 function calculateMandays(module: Module): number {
   const startDate = new Date(module.addDate);

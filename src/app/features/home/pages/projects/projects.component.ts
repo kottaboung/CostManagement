@@ -1,5 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { Projects } from '../../mockup-data';
+import { Projects } from '../../mockup-interface';
 import { LoadingService } from '../../../../shared/services/loading.service';
 import { HttpClient } from '@angular/common/http';
 import { calculateTotalCost } from '../../mockup-service';
