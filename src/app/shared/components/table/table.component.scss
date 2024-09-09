@@ -2,6 +2,7 @@
 ngx-datatable {
   display: block;
   width: 100%;
+  overflow: auto;
 }
 
 // Header styles
@@ -33,6 +34,7 @@ ngx-datatable-footer {
   display: flex;
   flex-direction: column;
   width: 100%;
+  overflow: auto;
 }
 
 .datatable-row {

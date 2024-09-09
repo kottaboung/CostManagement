@@ -16,10 +16,5 @@
   ],
   "include": [
     "src/**/*.d.ts"
-  ],
-  "exclude": [
-    "**/*.spec.ts",
-    "test.ts",
-    "polyfills.ts"
   ]
 }

@@ -10,20 +10,21 @@
             <!-- Display employees -->
             <li *ngFor="let employee of employees" class="list-group-item">
               <p>
-                {{ employee.emName }} &nbsp; {{ employee.possition }}<br>
-                {{ employee.emCost | number }} THB per day
+                <strong>{{ employee.emName }} &nbsp; {{ employee.possition }}<br></strong> 
+                <strong>{{ employee.emCost | number }} THB per day</strong>
               </p>
               <ul class="list-group mt-2">
                 <!-- Display events for each employee -->
                 <li *ngFor="let event of employeeEvents[employee.id] || []" 
-                    class="list-group-item"
-                    style="cursor: pointer;" 
-                    (click)="scrollToEvent(event.id)">
-                  <p>
-                    <strong>Event:</strong> {{ event.title }}<br>
-                    <strong>Description:</strong> {{ event.extendedProps?.['descript'] || 'No description available' }}                   
-                  </p>                      
-                </li>
+                  class="list-group-item"
+                  [ngStyle]="{'background-color': employeeColors[employee.id] || '#ffffff'}"
+                  style="cursor: pointer;" 
+                  (click)="scrollToEvent(event.id)">
+                <p>
+                  <strong>Event:</strong> {{ event.title }}<br>
+                  Description: {{ event.extendedProps?.['descript'] || 'No description available' }}                   
+                </p>                      
+              </li>
               </ul>
             </li>
           </ul>
