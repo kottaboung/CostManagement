@@ -35,13 +35,32 @@ export class CallendarComponent implements OnInit {
     eventClick: this.handleEventClick.bind(this),
   };
 
+  private getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  private assignRandomColors(): void {
+    this.employees.forEach(employee => {
+      if (!this.employeeColors[employee.id]) {
+        this.employeeColors[employee.id] = this.getRandomColor();
+      }
+    });
+  }
+
   employeeEvents: { [key: number]: EventInput[] } = {};
+  employeeColors: { [key: number]: string } = {};
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     if (this.projectName) {
       this.loadEvents();
+      this.assignRandomColors();
     }
   }
 
