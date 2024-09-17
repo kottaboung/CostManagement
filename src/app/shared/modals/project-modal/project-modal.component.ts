@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -19,10 +19,14 @@ export class ProjectModalComponent {
   ) {
     this.projectForm = this.fb.group({
       projectName: ['', Validators.required],
-      startDate: [this.minDate, Validators.required],
+      startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      employee: ['', Validators.required]
+      employees: this.fb.array([])
     });
+  }
+
+  get employees(): FormArray {
+    return this.projectForm.get('employees') as FormArray;
   }
 
   get startDate() {
@@ -33,8 +37,29 @@ export class ProjectModalComponent {
     return this.projectForm.get('endDate')?.value;
   }
 
+  addEmployee(employeeNameInput: HTMLInputElement, employeeCostInput: HTMLInputElement): void {
+    if (employeeNameInput.value && employeeCostInput.value) {
+      const employeeGroup = this.fb.group({
+        employeeName: [employeeNameInput.value, Validators.required],
+        employeeCost: [employeeCostInput.value, Validators.required]
+      });
+  
+      this.employees.push(employeeGroup);
+  
+      // Reset the input fields after adding the employee
+      employeeNameInput.value = '';
+      employeeCostInput.value = '';
+    }
+  }
+
+  // Remove employee from the FormArray
+  removeEmployee(index: number): void {
+    this.employees.removeAt(index);
+  }
+
   onSubmit() {
     if (this.projectForm.valid) {
+
       this.projectCreated.emit(this.projectForm.value);
       this.closeModal();
     }

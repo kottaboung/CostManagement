@@ -21,7 +21,7 @@
       <ng-container [ngSwitch]="dataTable">
         <ng-container *ngSwitchCase="'projects'">
           <ng-container  *ngIf="col.prop === 'detail'">
-            <button type="button" class="btn btn-primary" (click)="onDetailClick(row)">Details</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="onDetailClick(row)">Details</button>
           </ng-container>
           <ng-container *ngIf="col.prop === 'createdDate'">
             {{ value | date:'shortDate' }}
@@ -60,6 +60,5 @@
   </ngx-datatable-column>
 
   <ngx-datatable-footer>
-    <!-- Footer content, if any -->
   </ngx-datatable-footer>
 </ngx-datatable>
