@@ -3,6 +3,9 @@
       <!-- Employees Column -->
       <div class="col-3 bg-light">
         <div class="p-4">
+          <button type="button" class="btn btn-primary" (click)="openCreateEventOffcanvas()">
+            Create Event
+          </button>
         </div>
         <div class="p-3">
           <ul class="list-group scroll">
@@ -36,6 +39,44 @@
           <full-calendar #calendar [options]="calendarOptions"></full-calendar>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="editEventOffcanvas" aria-labelledby="editEventOffcanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="editEventOffcanvasLabel">{{ editMode ? 'Edit' : 'Create' }} Event</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form [formGroup]="eventForm">
+        <div class="mb-3">
+          <label for="eventTitle" class="form-label">Event Title</label>
+          <input type="text" id="eventTitle" class="form-control" formControlName="title">
+        </div>
+        <div class="mb-3">
+          <label for="startDateTime" class="form-label">Start Date and Time</label>
+          <input type="datetime-local" id="startDateTime" class="form-control" formControlName="start">
+        </div>
+        <div class="mb-3">
+          <label for="endDateTime" class="form-label">Due Date and Time</label>
+          <input type="datetime-local" id="endDateTime" class="form-control" formControlName="end">
+        </div>
+        <div class="mb-3">
+          <label for="employees" class="form-label">Employee</label>
+          <input type="text" class="form-control" id="employee" formControlName="employee" >
+          <div>
+            <button class="btn btn-success">add</button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="eventDescription" class="form-label">Description</label>
+          <textarea id="eventDescription" class="form-control" formControlName="descript"></textarea>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="saveEvent()">Save</button>
+          <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="offcanvas">Close</button>
+        </div>
+      </form>
     </div>
   </div>
   

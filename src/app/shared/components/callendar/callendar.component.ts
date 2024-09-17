@@ -7,7 +7,9 @@ import listPlugin from '@fullcalendar/list'; // import listPlugin
 import interactionPlugin from '@fullcalendar/interaction'
 import { Employee, Projects } from '../../../features/home/mockup-interface';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
+declare var bootstrap: any;
 @Component({
   selector: 'app-callendar',
   templateUrl: './callendar.component.html',
@@ -17,6 +19,10 @@ export class CallendarComponent implements OnInit {
 
   @Input() projectName: string = '';
   @Input() employees: Employee[] = [];
+  selectedEvent: any;
+  eventForm!: FormGroup;
+  editMode: boolean = false;
+  selectedEventId: string | null = null;
 
   @ViewChild(FullCalendarComponent) calendarComponent!: FullCalendarComponent;
 
@@ -55,9 +61,15 @@ export class CallendarComponent implements OnInit {
   employeeEvents: { [key: number]: EventInput[] } = {};
   employeeColors: { [key: number]: string } = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.eventForm = this.fb.group({
+      title: [''],
+      start: [''],
+      end: [''],
+      descript: [''],
+    });
     if (this.projectName) {
       this.loadEvents();
       this.assignRandomColors();
@@ -107,12 +119,81 @@ export class CallendarComponent implements OnInit {
       console.error('Error loading events: ', error);
     });
   }
+
+  openCreateEventOffcanvas(): void {
+    this.editMode = false;
+    this.selectedEventId = null;
+
+    const today = new Date().toISOString().split('T')[0]; // Get current date in yyyy-mm-dd format
+
+    // Reset the form with default values (start date set to today)
+    this.eventForm.reset({
+      title: '',
+      start: today + 'T09:00', // Default start time at 9 AM
+      end: today + 'T17:00',   // Default end time at 5 PM
+      descript: ''
+    });
+
+    const offcanvasElement = document.getElementById('editEventOffcanvas');
+    const offcanvas = new bootstrap.Offcanvas(offcanvasElement!);
+    offcanvas.show();
+  }
   
 
   handleEventClick(arg: any): void {
-    const descript = arg.event.extendedProps['descript'] || 'No description available';
-    alert('Event clicked: ' + arg.event.title + '\nDescription: ' + descript);
+    this.selectedEvent = arg.event;
+    this.editMode = true; // Set edit mode to true
+    this.selectedEventId = this.selectedEvent.id;
+  
+    // Populate the form with selected event details
+    this.eventForm.patchValue({
+      title: this.selectedEvent.title,
+      start: this.selectedEvent.startStr,
+      end: this.selectedEvent.endStr,
+      descript: this.selectedEvent.extendedProps['descript'],
+    });
+  
+    // Open the Bootstrap offcanvas
+    const offcanvasElement = document.getElementById('editEventOffcanvas');
+    const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    offcanvas.show();
   }
+  
+
+  saveEvent(): void {
+    const eventData = this.eventForm.value;
+  
+    if (this.editMode && this.selectedEvent) {
+      // Edit existing event
+      const calendarApi = this.calendarComponent.getApi();
+      const event = calendarApi.getEventById(this.selectedEvent.id);
+  
+      if (event) {
+        // Update the event properties
+        event.setProp('title', eventData.title);
+        event.setDates(eventData.start, eventData.end);
+        event.setExtendedProp('descript', eventData.descript);
+      }
+    } else {
+      // Create new event
+      const newEvent: EventInput = {
+        title: eventData.title,
+        start: eventData.start,
+        end: eventData.end,
+        extendedProps: {
+          descript: eventData.descript
+        }
+      };
+  
+      this.calendarComponent.getApi().addEvent(newEvent);
+    }
+  
+    // Hide the offcanvas after saving
+    const offcanvasElement = document.getElementById('editEventOffcanvas');
+    const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement!);
+    offcanvas?.hide();
+  }
+  
 
   scrollToEvent(eventId?: string): void {
     if (!eventId) {

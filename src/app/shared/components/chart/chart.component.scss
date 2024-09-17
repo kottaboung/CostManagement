@@ -2,6 +2,16 @@
     margin-bottom: 1rem;
   }
   
+.m150{
+  
+  div{
+    display: flex;
+    flex-direction: column;
+    align-content: end;
+  }
+}
+
+
   .form-control {
     width: 100%;
     padding: 0.5rem;
