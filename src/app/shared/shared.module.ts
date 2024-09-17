@@ -6,7 +6,9 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { IconSvgComponent } from './components/icon-svg/icon-svg.component';
 import { IconColorPipe } from './pipe/icon-color.pipe';
 import { IconSizePipe } from './pipe/icon-size.pipe';
@@ -15,6 +17,7 @@ import { LoadingModalComponent } from './modals/loading-modal/loading-modal.comp
 import { TableComponent } from './components/table/table.component';
 import { CallendarComponent } from './components/callendar/callendar.component';
 import { LoadingService } from './services/loading.service';
+import { ProjectModalComponent } from './modals/project-modal/project-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,11 +27,15 @@ import { LoadingService } from './services/loading.service';
     ChartComponent,
     LoadingModalComponent,
     TableComponent,
-    CallendarComponent
+    CallendarComponent,
+    ProjectModalComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
     ReactiveFormsModule,
     NgxMaskDirective,
     NgxMaskPipe,
@@ -46,7 +53,11 @@ import { LoadingService } from './services/loading.service';
     ChartComponent,
     LoadingModalComponent,
     TableComponent,
-    CallendarComponent
+    CallendarComponent,
+    ProjectModalComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   providers: [
     LoadingService,

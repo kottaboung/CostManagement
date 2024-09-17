@@ -1,4 +1,11 @@
 <div *ngIf="currentStep === 1">
+  <div class="d-flex justify-content-end">
+      <button 
+      class="btn btn-primary mb-3 " 
+      type="button" 
+      (click)="openCreateProjectModal()"
+      ><span class="badge badge-light">+</span> Create New Project </button>
+  </div>
   <app-table
     [rows]="rows"
     [columns]="columns"
