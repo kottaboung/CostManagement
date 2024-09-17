@@ -1,5 +1,24 @@
 <div class="content">
-   
+    <div class="container mb-5">
+        <div class="row position-relative">
+            <button class="btn btn-primary position-abslute top-50 start-0 translate-middle-y" (click)="slideLeft()" [disabled]="currentsIndex === 0">
+                &lt;
+            </button>
+            <div class="col of mb-5">
+                <div class="d-flex carousel-inner gap-3" [ngStyle]="{'transform': 'translateX(-' + currentsIndex * (100 / visibleCards) + '%)'}">
+                    <div class="card me-3" *ngFor="let card of cards" style="flex: 0 0 calc(100% / 3);">
+                        <div class="card-body">
+                            <h5 class="card-title">{{card.title}}</h5>
+                            <p class="card-text">{{card.description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary position-abslute top-50 end-0 translate-middle-y " (click)="slideRight()" [disabled]="currentsIndex >= maxIndex">
+                &gt;
+            </button>
+        </div>
+    </div>   
     <app-chart [isloading]="isLoading" (chartItemClicked)="onChartItemClicked($event)"></app-chart>
 </div>
     

@@ -5,6 +5,7 @@ import { ChartDetailComponent } from '../../modals/chart-detail/chart-detail.com
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { title } from 'node:process';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,9 @@ export class DashboardComponent implements OnInit {
   selectedYear: number = 2024;
   isLoading: boolean = false;
 
+  currentsIndex = 0;
+  visibleCards = 3;
+
   private mockProjectsUrl = '/assets/mockdata/mockData.json';  // URL to JSON file
 
   constructor(
@@ -25,6 +29,32 @@ export class DashboardComponent implements OnInit {
     private dialog: MatDialog,
     private http: HttpClient
   ) {}
+
+  public cards = [
+    { title: 'Total Projects', description: 'Description 1' },
+    { title: 'Current Year Cost', description:  'cost...'},
+    { title: 'Totol Cost', description:  'cost...'},
+    { title: 'Lastest Project', description:  'Project...'}
+    
+  ]
+
+  get maxIndex(): number {
+    return Math.max(this.cards.length - this.visibleCards);
+  }
+
+  slideLeft() {
+    if (this.currentsIndex >= 0) {
+      this.currentsIndex--;
+      // this.visibleCards++;
+    }
+  }
+
+  slideRight() {
+    if (this.currentsIndex < this.maxIndex) {
+      this.currentsIndex++;
+      // this.visibleCards--;
+    }
+  }
 
   ngOnInit() {
     this.loadingService.showLoading();
@@ -40,7 +70,9 @@ export class DashboardComponent implements OnInit {
     return this.http.get<any[]>(this.mockProjectsUrl).pipe(
       map(projects => projects.map(p => ({
         ...p,
+        
         createdDate: new Date(p.createdDate)
+        
       })))
     );
   }

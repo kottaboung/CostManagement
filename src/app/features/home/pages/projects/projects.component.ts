@@ -3,6 +3,9 @@ import { Projects } from '../../mockup-interface';
 import { LoadingService } from '../../../../shared/services/loading.service';
 import { HttpClient } from '@angular/common/http';
 import { calculateTotalCost } from '../../mockup-service';
+import { ProjectService } from '../../../../shared/services/project.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectModalComponent } from '../../../../shared/modals/project-modal/project-modal.component';
 
 @Component({
   selector: 'app-projects',
@@ -25,15 +28,40 @@ export class ProjectsComponent implements OnInit {
   projects: Projects[] = [];
   projectName: string = '';
 
-  constructor(private loading: LoadingService, private http: HttpClient) {}
+  constructor(
+    private loading: LoadingService, 
+    private http: HttpClient, 
+    private projectService: ProjectService, 
+    private dialog: MatDialog) {
+    
+  }
+
+  openCreateProjectModal() {
+    const dialogRef = this.dialog.open(ProjectModalComponent, {
+      
+    });
+
+    dialogRef.componentInstance.projectCreated.subscribe((newProject: any) => {
+      this.projectService.createProject(newProject).subscribe((project) => {
+        this.projects.push(project);
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.loading.showLoading();
+    this.onloadProjects();
     setTimeout(() => {
       this.loadProjects(); 
       this.loading.hideLoading();
     }, 300);
     
+  }
+
+  onloadProjects() {
+    this.projectService.getProjects().subscribe((projects) => {
+      this.projects = projects;
+    });
   }
 
   loadProjects(): void {
