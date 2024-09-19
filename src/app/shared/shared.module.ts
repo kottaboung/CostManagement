@@ -18,6 +18,7 @@ import { TableComponent } from './components/table/table.component';
 import { CallendarComponent } from './components/callendar/callendar.component';
 import { LoadingService } from './services/loading.service';
 import { ProjectModalComponent } from './modals/project-modal/project-modal.component';
+import { ApiService } from './services/api.service';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ProjectModalComponent } from './modals/project-modal/project-modal.comp
   ],
   providers: [
     LoadingService,
+    ApiService,
     provideNgxMask()
   ]
 })

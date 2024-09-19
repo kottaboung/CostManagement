@@ -1,10 +1,13 @@
 <div *ngIf="isBrowser; else loading">
-  <div class="form-group col-2">
-    <label for="yearSelect">Select Year</label>
-    <select class="form-control" (change)="onYearChange($event)">
-      <option *ngFor="let year of years" [value]="year.year">{{ year.label }}</option>
-    </select> 
+  <div class="d-flex justify-content-end mx-5 m150">
+    <div class="form-group col-2">
+      <label for="yearSelect">Select Year</label>
+      <select class="form-control" (change)="onYearChange($event)">
+        <option *ngFor="let year of years" [value]="year.year">{{ year.label }}</option>
+      </select> 
+    </div>
   </div>
+  
   <div echarts id="chart" class="chart-container"></div>
 </div>
 <ng-template class="text-center" #loading>

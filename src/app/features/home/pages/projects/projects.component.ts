@@ -6,6 +6,10 @@ import { calculateTotalCost } from '../../mockup-service';
 import { ProjectService } from '../../../../shared/services/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectModalComponent } from '../../../../shared/modals/project-modal/project-modal.component';
+import { ApiService } from '../../../../shared/services/api.service';
+import { rProjects } from './../../../../core/interface/dataresponse.interface';
+import { ApiResponse } from '../../../../core/interface/response.interface';
+import { error } from 'console';
 
 @Component({
   selector: 'app-projects',
@@ -14,22 +18,25 @@ import { ProjectModalComponent } from '../../../../shared/modals/project-modal/p
 })
 export class ProjectsComponent implements OnInit {
   columns = [
-    { title: 'Project Name', prop: 'name', sortable: true, width: 300 },
-    { title: 'Cost', prop: 'cost', sortable: true, width: 300 },
-    { title: 'Created Date', prop: 'createdDate', sortable: true, width: 300 },
-    { title: 'Status', prop: 'status', sortable: false, width: 200 },
+    { title: 'Project Name', prop: 'ProjectName', sortable: true, width: 300 },
+    { title: 'Cost', prop: 'cost', sortable: true, width: 250 },
+    { title: 'Created Date', prop: 'ProjectStart', sortable: true, width: 150 },
+    { title: 'End Date', prop: 'ProjectEnd', sortable: true, width: 150 },
+    { title: 'Status', prop: 'ProjectStatus', sortable: false, width: 200 },
     { title: 'Detail', prop: 'detail', sortable: false, width: 100 }
   ];
   
   rows: Projects[] = []; // Ensure it's an empty array initially
   
   @Output() currentStep: number = 1;
-  Project: Projects | null = null;
-  projects: Projects[] = [];
+  Project: rProjects | null = null;
+  projects: rProjects[] = [];
   projectName: string = '';
+  real_projects: rProjects[] =[];
 
   constructor(
     private loading: LoadingService, 
+    private apiService: ApiService,
     private http: HttpClient, 
     private projectService: ProjectService, 
     private dialog: MatDialog) {
@@ -50,44 +57,65 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading.showLoading();
-    this.onloadProjects();
+    // this.onloadProjects();
+    // setTimeout(() => {
+    //   this.loadProjects(); 
+    //   this.loading.hideLoading();
+    // }, 300);
     setTimeout(() => {
-      this.loadProjects(); 
+      this.getProject();
       this.loading.hideLoading();
     }, 300);
-    
   }
 
-  onloadProjects() {
-    this.projectService.getProjects().subscribe((projects) => {
-      this.projects = projects;
-    });
-  }
+  // onloadProjects() {
+  //   this.projectService.getProjects().subscribe((projects) => {
+  //     this.projects = projects;
+  //   });
+  // }
 
-  loadProjects(): void {
-  this.http.get<Projects[]>('../assets/mockdata/mockData.json').subscribe(
-    (data) => {
-      console.log('Loaded projects data:', data); // Debugging line
-      this.projects = data.map(project => {
-        project.cost = calculateTotalCost(project);
-        return project;
-      });
-      this.rows = this.projects;
-      this.loading.hideLoading();
+//   loadProjects(): void {
+//   this.http.get<Projects[]>('../assets/mockdata/mockData.json').subscribe(
+//     (data) => {
+//       console.log('Loaded projects data:', data); // Debugging line
+//       this.projects = data.map(project => {
+//         project.cost = calculateTotalCost(project);
+//         return project;
+//       });
+//       this.rows = this.projects;
+//       this.loading.hideLoading();
+//     },
+//     (error) => {
+//       console.error('Error loading projects data:', error);
+//       this.loading.hideLoading();
+//     }
+//   );
+// }
+
+getProject(): void {
+  this.apiService.getApi<rProjects[]>('getprojects').subscribe({
+    next: (res: ApiResponse<rProjects[]>) => {
+      if (res.status === 'success') {
+        this.real_projects = res.data;
+      } else {
+        console.error(res.message);
+      }
     },
-    (error) => {
-      console.error('Error loading projects data:', error);
-      this.loading.hideLoading();
-    }
-  );
+    error: (error) => {
+      console.error('An error occurred:', error);
+    },
+  });
 }
 
+// addProject(): void {
 
-  onDetailClick(project: Projects): void {
+// }
+
+  onDetailClick(project: rProjects): void {
     console.log(this.currentStep);
     
-    if (project && project.name) {
-      this.projectName = project.name;
+    if (project && project.ProjectName) {
+      this.projectName = project.ProjectName;
       this.Project = project
       this.currentStep = 2; 
     } else {

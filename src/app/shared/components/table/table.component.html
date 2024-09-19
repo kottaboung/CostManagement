@@ -21,23 +21,29 @@
       <ng-container [ngSwitch]="dataTable">
         <ng-container *ngSwitchCase="'projects'">
           <ng-container  *ngIf="col.prop === 'detail'">
-            <button type="button" class="btn btn-primary" (click)="onDetailClick(row)">Details</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="onDetailClick(row)">Details</button>
           </ng-container>
-          <ng-container *ngIf="col.prop === 'createdDate'">
+          <ng-container *ngIf="col.prop === 'ProjectStart'">
+            {{ value | date:'shortDate' }}
+          </ng-container>
+          <ng-container *ngIf="col.prop === 'ProjectEnd'">
             {{ value | date:'shortDate' }}
           </ng-container>
           <ng-container *ngIf="col.prop === 'cost'">
             {{ value | number }} THB
           </ng-container>
-          <ng-container *ngIf="col.prop !== 'detail' && col.prop !== 'createdDate' && col.prop !== 'cost'">
+          <ng-container *ngIf="col.prop === 'Projectstatus'">
+            {{ status(value) }}
+          </ng-container>          
+          <ng-container *ngIf="col.prop !== 'detail' && col.prop !== 'ProjectStart' && col.prop !== 'ProjectEnd' && col.prop !== 'cost'">
             {{ value }}
           </ng-container>
         </ng-container>
         <ng-container *ngSwitchCase="'modules'">
-          <ng-container *ngIf="col.prop === 'addDate'">
+          <ng-container *ngIf="col.prop === 'ModuleAddDate'">
             {{ value | date:'shortDate' }}
           </ng-container>
-          <ng-container *ngIf="col.prop === 'dueDate'">
+          <ng-container *ngIf="col.prop === 'ModuleDueDate'">
             {{ value | date:'shortDate' }}
           </ng-container>
           <ng-container *ngIf="col.prop === 'manday'">
@@ -46,12 +52,12 @@
           <ng-container *ngIf="col.prop === 'mCost'">
             {{ value | number }} THB
           </ng-container>
-          <ng-container *ngIf="col.prop !== 'addDate' && col.prop !== 'dueDate' && col.prop !== 'manday' && col.prop !== 'mCost'">
+          <ng-container *ngIf="col.prop !== 'ModuleAddDate' && col.prop !== 'ModuleDueDate' && col.prop !== 'manday' && col.prop !== 'mCost'">
             {{ value }}
           </ng-container>
         </ng-container>
         <ng-container *ngSwitchCase="'employees'">
-          <ng-container *ngIf="col.prop !== 'emCost'">
+          <ng-container *ngIf="col.prop !== 'EmployeeCost'">
             {{ value }}
           </ng-container>
         </ng-container>
@@ -60,6 +66,9 @@
   </ngx-datatable-column>
 
   <ngx-datatable-footer>
-    <!-- Footer content, if any -->
   </ngx-datatable-footer>
 </ngx-datatable>
+
+<div *ngIf="!rows && !columns">
+  <h5 class="text-center text-bold">NO DATA</h5>
+</div>
