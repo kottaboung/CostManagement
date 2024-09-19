@@ -1,36 +1,32 @@
 
-export interface Employee {
-    id: number; 
-    emName: string;
-    emCost: number;
-    possition: string;
+export interface rEmployee {
+    EmployeeID: number; 
+    EmployeeName: string;
+    EmployeeCost: number;
+    EmployeePosition: string;
   }
   
-  export interface Module {
-    moduleName: string;
-    addDate: Date;
-    dueDate: Date;
-    active: boolean;
-    manday: number;
-    mCost?: number;
-    employees: Employee[];
-    mockEvents: Events[];
+  export interface rModule {
+    ModuleName: string;
+    ModuleAddDate: Date;
+    ModuleDueDate: Date;
+    ModuleActive: boolean;
   }
   
-  export interface Projects {
-    name: string;
-    createdDate: Date;
-    status: boolean;
-    modules: Module[];
-    employees: Employee[];
+  export interface rProjects {
+    ProjectName: string;
+    ProjectStart: Date;
+    ProjectEnd: Date;
+    ProjectStatus: boolean;
     cost?: number;
     detail: any
   }
   
-  export interface Events {
-    title: string;
-    descript?: string;
-    date: Date;
-    employeeId?: number;
+  export interface rEvents {
+    EventTitle: string;
+    EventDescript?: string;
+    EventStartDate: Date;
+    EventEndDate: Date;
+    EmployeeID?: number;
   }
   

@@ -7,7 +7,7 @@ import listPlugin from '@fullcalendar/list'; // import listPlugin
 import interactionPlugin from '@fullcalendar/interaction'
 import { Employee, Projects } from '../../../features/home/mockup-interface';
 import { FullCalendarComponent } from '@fullcalendar/angular';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 declare var bootstrap: any;
 @Component({
@@ -20,7 +20,7 @@ export class CallendarComponent implements OnInit {
   @Input() projectName: string = '';
   @Input() employees: Employee[] = [];
   selectedEvent: any;
-  eventForm!: FormGroup;
+  eventForm: FormGroup;
   editMode: boolean = false;
   selectedEventId: string | null = null;
 
@@ -61,15 +61,18 @@ export class CallendarComponent implements OnInit {
   employeeEvents: { [key: number]: EventInput[] } = {};
   employeeColors: { [key: number]: string } = {};
 
-  constructor(private http: HttpClient,private fb: FormBuilder) {}
+  constructor(private http: HttpClient,private fb: FormBuilder) {
+    this.eventForm = this.fb.group({
+      title: ['',Validators.required],
+      start: ['',Validators.required],
+      end: ['',Validators.required],
+      descript: [''],
+      Evemployees: this.fb.array([])
+    });
+  }
 
   ngOnInit(): void {
-    this.eventForm = this.fb.group({
-      title: [''],
-      start: [''],
-      end: [''],
-      descript: [''],
-    });
+    
     if (this.projectName) {
       this.loadEvents();
       this.assignRandomColors();
@@ -158,6 +161,29 @@ export class CallendarComponent implements OnInit {
     const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
     offcanvas.show();
   }
+
+  get Evemployees(): FormArray {
+    return this.eventForm.get('Evemployees') as FormArray;
+  }
+
+  addEmployee(employeeNameInput: HTMLInputElement): void {
+    if (employeeNameInput.value) {
+      const employeeGroup = this.fb.group({
+        employeeName: [employeeNameInput.value, Validators.required]
+        
+      });
+  
+      this.Evemployees.push(employeeGroup);      
+      // Reset the input fields after adding the employee
+      employeeNameInput.value = '';
+      
+    }
+  }
+
+  // Remove employee from the FormArray
+  removeEmployee(index: number): void {
+    this.Evemployees.removeAt(index);
+  }
   
 
   saveEvent(): void {
@@ -182,7 +208,8 @@ export class CallendarComponent implements OnInit {
         end: eventData.end,
         extendedProps: {
           descript: eventData.descript
-        }
+        },
+        
       };
   
       this.calendarComponent.getApi().addEvent(newEvent);

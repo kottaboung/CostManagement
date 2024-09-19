@@ -3,6 +3,8 @@ import { Projects } from '../../../mockup-interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { calculateTotalCost } from '../../../mockup-service';
+import { rProjects } from '../../../../../core/interface/dataresponse.interface';
+import { ApiService } from '../../../../../shared/services/api.service';
 
 @Component({
   selector: 'app-project-detail',
@@ -10,49 +12,60 @@ import { calculateTotalCost } from '../../../mockup-service';
   styleUrls: ['./project-detail.component.scss'],
 })
 export class ProjectDetailComponent implements OnInit {
-  public project: Projects | undefined;
+  public project: rProjects | undefined;
   @Input() currentStep = 2;
   public projectDetails: { label: string, value: string | number | any }[] = [];
   public page = 1;
   public pageName: string = "";
   projectName: string | null = null;
-  @Input() Project: Projects | null = null;
+  @Input() Project: rProjects | null = null;
   @Input() public active: boolean = true;
 
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private http: HttpClient, 
+    private apiserivce: ApiService) { }
 
   ngOnInit(): void {
     // Load project based on the route parameter
     this.route.paramMap.subscribe(params => {
       this.projectName = params.get('name');
       if (this.projectName) {
-        this.loadProject();
+        //this.loadProject();
       }
     });
   }
 
-  loadProject(): void {
-    this.http.get<Projects[]>('../assets/mockdata/mockData.json').subscribe(data => {
-      this.project = data.find(p => p.name === this.projectName);
-
-      if (this.project) {
-        const formattedDate = this.formatDate(this.project.createdDate);
-        
-        this.projectDetails = [
-          { label: 'Name', value: this.project.name },
-          { label: 'Cost', value: this.project.cost = calculateTotalCost(this.project) },
-          { label: 'Created Date', value: formattedDate },
-          { label: 'Status', value: this.project.status }
-        ];
-      } else {
-        // Redirect or show a user-friendly message if the project is not found
-        this.router.navigate(['/projects'], { queryParams: { error: 'not-found' } });
-      }
-    }, (error) => {
-      console.error('Error loading project data:', error);
-      this.router.navigate(['/projects'], { queryParams: { error: 'loading-error' } });
-    });
-  }
+  // loadProject(): void {
+  //   // Call the real API endpoint
+  //   this.apiserivce.getApi<rProjects[]>('getprojects').subscribe({
+  //     next: (data: rProjects[]) => {
+  //       this.project = data.find(p => p.ProjectName === this.projectName);
+  
+  //       if (this.project) {
+  //         const formattedDate = this.formatDate(this.project.ProjectStart);
+          
+  //         this.projectDetails = [
+  //           { label: 'Name', value: this.project.ProjectName },
+  //           //{ label: 'Cost', value: this.calculateTotalCost(this.project) },
+  //           { label: 'Created Date', value: formattedDate },
+  //           { label: 'Status', value: this.project.status } // Adjust 'status' if different in real data
+  //         ];
+  //       } else {
+  //         this.router.navigate(['/projects'], { queryParams: { error: 'not-found' } });
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading project data:', error);
+  //       this.router.navigate(['/projects'], { queryParams: { error: 'loading-error' } });
+  //     }
+  //   });
+  // }
+  
+  // loadProjects(): void {
+  //   this.apiserivce.getApi()
+  // }
 
   private formatDate(date: Date | string): string {
     if (!date) return '';

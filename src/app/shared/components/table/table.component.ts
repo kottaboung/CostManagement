@@ -5,6 +5,9 @@ import { Module, Projects, Employee } from '../../../features/home/mockup-interf
 import { mock } from '../../../core/type/mockData';
 import { catchError, map, Observable, of } from 'rxjs';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { ApiService } from '../../services/api.service';
+import { rProjects } from '../../../core/interface/dataresponse.interface';
+import { ApiResponse } from '../../../core/interface/response.interface';
 
 @Component({
   selector: 'app-table',
@@ -18,72 +21,100 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() columns: any[] = [];
   @Input() dataTable: 'projects' | 'modules' | 'employees' = 'projects';
   @Input() projectName?: string;
-  @Output() detailClick: EventEmitter<Projects> = new EventEmitter<Projects>();
+  @Output() detailClick: EventEmitter<rProjects> = new EventEmitter<rProjects>();
   //@ViewChild(DatatableComponent) table: DatatableComponent;
 
-  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) { }
+  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef, private apiservice: ApiService) { }
 
   ngAfterViewInit(): void {
       this.cdr.detectChanges();
       //this.table.recalculate();
   }
 
+  // ngOnInit(): void {
+  //   if (!this.projectName && this.dataTable !== 'projects') {
+  //     this.projectName = this.rows.length > 0 ? this.rows[0].name : undefined;
+  //   }
+  //   this.loadEvent().subscribe({
+  //     next: (data) => {
+  //       this.rows = data;
+  //       console.log('Loaded rows:', this.rows);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading data:', error);
+  //     }
+  //   });
+  // }
+
   ngOnInit(): void {
-    if (!this.projectName && this.dataTable !== 'projects') {
-      this.projectName = this.rows.length > 0 ? this.rows[0].name : undefined;
+    if (this.dataTable === 'projects') {
+      this.getProjectsFromApi(); 
+    } else if (this.projectName) {
+      this.loadDetailsFromApi();
+    } else {
+      console.warn('projectName is required for modules or employees data!');
     }
-    this.loadEvent().subscribe({
-      next: (data) => {
-        this.rows = data;
-        console.log('Loaded rows:', this.rows);
+  }
+
+  status(value: any): string {
+    return value === 0 ? 'working' : 'Go alive';
+  }  
+  
+  getProjectsFromApi(): void {
+    this.apiservice.getApi<rProjects[]>('getprojects').subscribe({
+      next: (res: ApiResponse<rProjects[]>) => {
+        if (res.status === 'success') {
+          this.rows = res.data.map(p => ({
+            ...p,
+            ProjectStart: new Date(p.ProjectStart),
+            ProjectEnd: new Date(p.ProjectEnd)
+          }));
+          console.log('Loaded real projects:', this.rows);
+        } else {
+          console.error(res.message);
+        }
       },
       error: (error) => {
-        console.error('Error loading data:', error);
+        console.error('An error occurred while fetching projects:', error);
       }
     });
   }
   
-  loadEvent(): Observable<any[]> {
-    if (!this.mockData) {
-      console.warn('No mockData provided!');
-      return of([]);
-    }
   
-    const url = `assets/mockdata/${this.mockData}.json`;
+  loadDetailsFromApi(): void {
+    const apiUrl = this.dataTable === 'modules' ? 'getmodules' : 'getemployees';
+    const params = { projectName: this.projectName }; // Your query params
   
-    return this.http.get<any[]>(url).pipe(
-      map((data) => {
-        console.log('Data received:', data); // Debugging line
-        if (this.dataTable === 'projects') {
-          return data.map((project: Projects) => ({
-            ...project,
-            createdDate: new Date(project.createdDate),
-            detail: project
-          }));
-        } else if (this.dataTable === 'modules') {
-          return this.getModulesForProject(data).map((module: Module) => {
-            const manday = this.calculateMandays(module);
-            return {
-              ...module,
-              addDate: new Date(module.addDate),
-              dueDate: new Date(module.dueDate),
-              manday: manday,
-              mCost: this.calculateModuleCost(module, manday) // Calculate mCost
-            };
-          });
-        } else if (this.dataTable === 'employees') {
-          return this.getEmployeesForProject(data).map((employee: Employee) => ({
-            ...employee
-          }));
+    this.apiservice.getParamApi<any[]>(apiUrl, params).subscribe({
+      next: (res: ApiResponse<any[]>) => {
+        if (res.status === 'success') {
+          if (this.dataTable === 'modules') {
+            this.rows = res.data.map((module: Module) => {
+              const manday = this.calculateMandays(module);
+              return {
+                ...module,
+                addDate: new Date(module.addDate),
+                dueDate: new Date(module.dueDate),
+                manday: manday,
+                mCost: this.calculateModuleCost(module, manday)
+              };
+            });
+          } else if (this.dataTable === 'employees') {
+            this.rows = res.data.map((employee: Employee) => ({
+              ...employee
+            }));
+          }
+          console.log(`Loaded ${this.dataTable} data:`, this.rows);
+        } else {
+          console.error(res.message);
         }
-        return [];
-      }),
-      catchError((error) => {
-        console.error('Error loading data:', error);
-        return of([]);
-      })
-    );
+      },
+      error: (error) => {
+        console.error(`Error fetching ${this.dataTable} data:`, error);
+      }
+    });
   }
+  
   
   calculateMandays(module: Module): number {
     const startDate = new Date(module.addDate);
@@ -98,31 +129,31 @@ export class TableComponent implements OnInit, AfterViewInit {
     return totalEmployeeCost * manday;
   }
 
-  getModulesForProject(data: any[]): Module[] {
-    if (!this.projectName) {
-      console.warn('projectName is undefined!');
-      return [];
-    }
-    const project = data.find(p => p.name === this.projectName);
-    if (!project) {
-      console.warn(`Project with name ${this.projectName} not found!`);
-      return [];
-    }
-    return project.modules || [];
-  }
+  // getModulesForProject(data: any[]): Module[] {
+  //   if (!this.projectName) {
+  //     console.warn('projectName is undefined!');
+  //     return [];
+  //   }
+  //   const project = data.find(p => p.name === this.projectName);
+  //   if (!project) {
+  //     console.warn(`Project with name ${this.projectName} not found!`);
+  //     return [];
+  //   }
+  //   return project.modules || [];
+  // }
   
-  getEmployeesForProject(data: any[]): Employee[] {
-    if (!this.projectName) {
-      console.warn('projectName is undefined!');
-      return [];
-    }
-    const project = data.find(p => p.name === this.projectName);
-    if (!project) {
-      console.warn(`Project with name ${this.projectName} not found!`);
-      return [];
-    }
-    return project.employees || [];
-  }
+  // getEmployeesForProject(data: any[]): Employee[] {
+  //   if (!this.projectName) {
+  //     console.warn('projectName is undefined!');
+  //     return [];
+  //   }
+  //   const project = data.find(p => p.name === this.projectName);
+  //   if (!project) {
+  //     console.warn(`Project with name ${this.projectName} not found!`);
+  //     return [];
+  //   }
+  //   return project.employees || [];
+  // }
   
 
   onDetailClick(row: Projects): void {
