@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { Projects } from '../../mockup-interface';
 import { LoadingService } from '../../../../shared/services/loading.service';
 import { HttpClient } from '@angular/common/http';
@@ -31,7 +31,7 @@ export class ProjectsComponent implements OnInit {
   @Output() currentStep: number = 1;
   Project: rProjects | null = null;
   projects: rProjects[] = [];
-  projectName: string = '';
+  @Input() projectName: string = '';
   real_projects: rProjects[] =[];
 
   constructor(
@@ -57,6 +57,7 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading.showLoading();
+    console.log("Projects", this.projects , `data here ${this.projectName}`)
     // this.onloadProjects();
     // setTimeout(() => {
     //   this.loadProjects(); 
@@ -97,6 +98,9 @@ getProject(): void {
     next: (res: ApiResponse<rProjects[]>) => {
       if (res.status === 'success') {
         this.real_projects = res.data;
+        res.data.map((name) => {
+          this.projectName = name.ProjectName
+        })
       } else {
         console.error(res.message);
       }
@@ -114,7 +118,7 @@ getProject(): void {
   onDetailClick(project: rProjects): void {
     console.log(this.currentStep);
     
-    if (project && project.ProjectName) {
+    if (project.ProjectName) {
       this.projectName = project.ProjectName;
       this.Project = project
       this.currentStep = 2; 
