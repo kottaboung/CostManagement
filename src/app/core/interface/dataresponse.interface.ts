@@ -11,6 +11,7 @@ export interface rEmployee {
     ModuleAddDate: Date;
     ModuleDueDate: Date;
     ModuleActive: boolean;
+    Employees: rEmployee[];
   }
   
   export interface rProjects {
