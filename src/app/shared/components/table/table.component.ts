@@ -20,7 +20,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() rows: any[] = [];
   @Input() columns: any[] = [];
   @Input() dataTable: 'projects' | 'modules' | 'employees' = 'projects';
-  @Input() projectName?: string;
+  @Output() projectName?: string;
   @Output() detailClick: EventEmitter<rProjects> = new EventEmitter<rProjects>();
   //@ViewChild(DatatableComponent) table: DatatableComponent;
 
@@ -67,7 +67,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.rows = res.data.map(p => ({
             ...p,
             ProjectStart: new Date(p.ProjectStart),
-            ProjectEnd: new Date(p.ProjectEnd)
+            ProjectEnd: new Date(p.ProjectEnd),
           }));
           console.log('Loaded real projects:', this.rows);
         } else {
@@ -104,7 +104,7 @@ export class TableComponent implements OnInit, AfterViewInit {
               ...employee
             }));
           }
-          console.log(`Loaded ${this.dataTable} data:`, this.rows);
+          console.log(`[Table Component]Loaded ${this.dataTable} data:`, this.rows);
         } else {
           console.error(res.message);
         }
@@ -156,12 +156,12 @@ export class TableComponent implements OnInit, AfterViewInit {
   // }
   
 
-  onDetailClick(row: Projects): void {
+  onDetailClick(row: rProjects): void {
     console.log('Row clicked:', row); // Debugging line
     
-    if (row && row.name) {
-      console.log('Navigating to:', `/projects/${row.name}`);
-      this.router.navigate([`/projects/${row.name}`]);
+    if (row && row.ProjectName) {
+      console.log('Navigating to:', `/projects/${row.ProjectName}`);
+      this.router.navigate([`/projects/${row.ProjectName}`]);
     } else {
       console.error('Row or row name is undefined', row);
     }
