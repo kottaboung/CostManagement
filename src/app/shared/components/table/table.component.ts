@@ -6,8 +6,9 @@ import { mock } from '../../../core/type/mockData';
 import { catchError, map, Observable, of } from 'rxjs';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { ApiService } from '../../services/api.service';
-import { rProjects } from '../../../core/interface/dataresponse.interface';
+import { rModule, rProjects } from '../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../core/interface/response.interface';
+import { master } from '../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-table',
@@ -21,7 +22,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() columns: any[] = [];
   @Input() dataTable: 'projects' | 'modules' | 'employees' = 'projects';
   @Output() projectName?: string;
-  @Output() detailClick: EventEmitter<rProjects> = new EventEmitter<rProjects>();
+  @Output() detailClick: EventEmitter<master> = new EventEmitter<master>();
   //@ViewChild(DatatableComponent) table: DatatableComponent;
 
   constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef, private apiservice: ApiService) { }
@@ -49,8 +50,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (this.dataTable === 'projects') {
       this.getProjectsFromApi(); 
-    } else if (this.projectName) {
-      this.loadDetailsFromApi();
+    } else if (this.projectName && this.dataTable === 'modules') {
+      this.loadModule();
     } else {
       console.warn('projectName is required for modules or employees data!');
     }
@@ -61,13 +62,14 @@ export class TableComponent implements OnInit, AfterViewInit {
   }  
   
   getProjectsFromApi(): void {
-    this.apiservice.getApi<rProjects[]>('getprojects').subscribe({
-      next: (res: ApiResponse<rProjects[]>) => {
+    this.apiservice.getApi<master[]>('getprojects').subscribe({
+      next: (res: ApiResponse<master[]>) => {
         if (res.status === 'success') {
           this.rows = res.data.map(p => ({
             ...p,
             ProjectStart: new Date(p.ProjectStart),
             ProjectEnd: new Date(p.ProjectEnd),
+            cost: this.calTotalCost(p)
           }));
           console.log('Loaded real projects:', this.rows);
         } else {
@@ -79,54 +81,88 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  
-  
-  loadDetailsFromApi(): void {
-    const apiUrl = this.dataTable === 'modules' ? 'getmodules' : 'getemployees';
-    const params = { projectName: this.projectName }; // Your query params
-  
-    this.apiservice.getParamApi<any[]>(apiUrl, params).subscribe({
-      next: (res: ApiResponse<any[]>) => {
-        if (res.status === 'success') {
-          if (this.dataTable === 'modules') {
-            this.rows = res.data.map((module: Module) => {
-              const manday = this.calculateMandays(module);
-              return {
-                ...module,
-                addDate: new Date(module.addDate),
-                dueDate: new Date(module.dueDate),
-                manday: manday,
-                mCost: this.calculateModuleCost(module, manday)
-              };
-            });
-          } else if (this.dataTable === 'employees') {
-            this.rows = res.data.map((employee: Employee) => ({
-              ...employee
-            }));
-          }
-          console.log(`[Table Component]Loaded ${this.dataTable} data:`, this.rows);
+
+  loadModule(): void{
+    this.apiservice.getApi<rModule[]>('GetAllModule').subscribe({
+      next: (res: ApiResponse<rModule[]>) => {
+        if(res.status === 'success') {
+          this.rows = res.data.map(m => ({
+            ...m,
+            ModuleName: m.ModuleName,
+            ModuleAddDate: new Date(m.ModuleAddDate),
+            ModuleDueDate: new Date(m.ModuleDueDate),
+            ModuleActive: m.ModuleActive
+          }));
+          console.log('Loaded module', this.rows);
         } else {
           console.error(res.message);
         }
       },
       error: (error) => {
-        console.error(`Error fetching ${this.dataTable} data:`, error);
+        console.error('error occured while fetching module', error);
       }
-    });
+    })
   }
   
   
-  calculateMandays(module: Module): number {
-    const startDate = new Date(module.addDate);
-    const dueDate = new Date(module.dueDate);
-    const diffTime = Math.abs(dueDate.getTime() - startDate.getTime());
-    const mandays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  // loadDetailsFromApi(): void {
+  //   const apiUrl = this.dataTable === 'modules' ? 'getmodules' : 'getemployees';
+  //   const params = { projectName: this.projectName }; // Your query params
+  
+  //   this.apiservice.getParamApi<any[]>(apiUrl, params).subscribe({
+  //     next: (res: ApiResponse<any[]>) => {
+  //       if (res.status === 'success') {
+  //         if (this.dataTable === 'modules') {
+  //           this.rows = res.data.map((module: Module) => {
+  //             const manday = this.calculateMandays(module);
+  //             return {
+  //               ...module,
+  //               addDate: new Date(module.addDate),
+  //               dueDate: new Date(module.dueDate),
+  //               manday: manday,
+  //               mCost: this.calculateModuleCost(module, manday)
+  //             };
+  //           });
+  //         } else if (this.dataTable === 'employees') {
+  //           this.rows = res.data.map((employee: Employee) => ({
+  //             ...employee
+  //           }));
+  //         }
+  //         console.log(`[Table Component]Loaded ${this.dataTable} data:`, this.rows);
+  //       } else {
+  //         console.error(res.message);
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error(`Error fetching ${this.dataTable} data:`, error);
+  //     }
+  //   });
+  // }
+  
+  
+  calTotalCost(project: master): number {
+    if(!project.modules || project.modules.length === 0) {
+      return 0;
+    }
+    if(!project.employees || project.employees.length === 0) {
+      return 0;
+    }
+    const moudleCost = project?.modules.reduce((total, module) => {
+      const mandays = this.findmanday(module);
+      const emCost = module?.Employees.reduce((moduleTotal, employee) => moduleTotal + employee.EmployeeCost, 0);
+      return total + (emCost * mandays);
+    }, 0);
+  
+    const employeeCosts = project.employees ? project.employees.reduce((total, employees) => total + employees.EmployeeCost, 0) :0;
+    return moudleCost + employeeCosts;
+  }
+  
+  findmanday(module: rModule): number {
+    const start = new Date(module.ModuleAddDate);
+    const due = new Date(module.ModuleDueDate);
+    const diffTime = Math.abs(due.getTime() - start.getTime());
+    const mandays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return mandays;
-  }
-
-  calculateModuleCost(module: Module, manday: number): number {
-    const totalEmployeeCost = module.employees.reduce((sum, employee) => sum + employee.emCost, 0);
-    return totalEmployeeCost * manday;
   }
 
   // getModulesForProject(data: any[]): Module[] {
@@ -156,7 +192,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   // }
   
 
-  onDetailClick(row: rProjects): void {
+  onDetailClick(row: master): void {
     console.log('Row clicked:', row); // Debugging line
     
     if (row && row.ProjectName) {

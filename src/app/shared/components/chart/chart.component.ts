@@ -6,6 +6,10 @@ import { map, take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { MockService } from '../../services/mock-service.service';
 import * as echarts from 'echarts';
+import { ApiService } from '../../services/api.service';
+import { rModule, rProjects } from '../../../core/interface/dataresponse.interface';
+import { error } from 'console';
+import { master } from '../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-chart',
@@ -24,8 +28,8 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private http: HttpClient,
-    private projectService: MockService
+    private projectService: MockService,
+    private apiService: ApiService
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.currentYear = new Date().getFullYear(); // Default to current year
@@ -33,7 +37,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.isBrowser) {
-      this.setupYears();
+      this.setUpYears();
     }
   }
 
@@ -54,27 +58,32 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  setupYears(): void {
-    this.projectService.getMockProjects().pipe(
-      map(projects => {
-        return projects.map(project => ({
-          ...project,
-          createdDate: new Date(project.createdDate)
-        }));
+  setUpYears(): void{
+    this.apiService.getApi<rProjects[]>('getprojects').pipe(
+      map(response => {
+        if(response.status == 'success' && response.data) {
+          return response.data.map(project => ({
+            ...project,
+            ProjectStart: new Date(project.ProjectStart)
+          }));
+        }
+        return [];
       }),
       map(projects => new Set<number>(
-        projects.map(project => project.createdDate.getFullYear())
+        projects.map(project => project.ProjectStart.getFullYear())
       ))
     ).subscribe(yearsSet => {
       this.years = Array.from(yearsSet)
-        .sort((a, b) => b - a)
-        .map(year => ({ year, label: year.toString() }));
+      .sort((a, b) => b-  a)
+      .map(year => ({year, label: year.toString() }));
 
-      this.currentYear = this.years[0].year;
-      if (this.isBrowser) {
+      this.currentYear = this.years[0]?.year || new Date().getFullYear();
+      if(this.isBrowser) {
         this.initializeChart(this.currentYear);
       }
-    });
+    }, error => {
+      console.error('Error fetched projects', error);
+    })
   }
 
   onYearChange(event: Event): void {
@@ -88,89 +97,107 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
     const chartElement = document.getElementById('chart') as HTMLElement;
 
     if (!chartElement) {
-      console.error('Chart DOM element not found');
-      return;
+        console.error('Chart DOM element not found');
+        return;
     }
 
     if (this.chart) {
-      this.chart.dispose();
+        this.chart.dispose();
     }
 
     this.chart = echarts.init(chartElement);
 
-    this.projectService.getMockProjects().pipe(
-      map(projects => projects.map(p => ({
-        ...p,
-        createdDate: typeof p.createdDate === 'string' ? new Date(p.createdDate) : p.createdDate,
-        cost: p.cost || this.calculateTotalCost(p) // Use recalculated cost
-      })))
-    ).subscribe(projects => {
-      const filteredProjects = projects.filter(p => (p.createdDate as Date).getFullYear() === year || (p.createdDate as Date).getFullYear() === year - 1);
-      const monthsInYear = this.getMonthsInYear(year);
-      const monthData = this.getMonthData(filteredProjects, monthsInYear);
-
-      this.chartOption = {
-        xAxis: {
-          type: 'category',
-          data: monthsInYear
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [{
-          data: monthData.map(d => d.totalCost || 0),
-          type: 'bar',
-          itemStyle: { color: '#42A5F5' }
-        }],
-        tooltip: {
-          formatter: (params: any) => {
-            const month = monthData.find(d => d.month === params.name);
-            if (month) {
-              const totalCost = month.projects.reduce((sum, project) => sum + (project.cost || 0), 0);
-              return `Total Cost: ${totalCost} THB<br>${month.projects.map(p => `${p.name}: ${p.cost || 0} THB`).join('<br>')}`;
+    this.apiService.getApi<master[]>('getdetail').pipe(
+        map(response => {
+            // Ensure the API response is successful
+            if (response.status === 'success' && response.data) {
+                return response.data.map(p => ({
+                    ProjectID: p.ProjectID,
+                    ProjectName: p.ProjectName,
+                    ProjectStart: new Date(p.ProjectStart),
+                    ProjectEnd: new Date(p.ProjectEnd),
+                    ProjectStatus: p.ProjectStatus, 
+                    employees: p.employees,
+                    cost: this.calculateTotalCost(p),
+                    modules: p.modules || [], // Include modules here (default to empty array if not present)
+                }));
             }
-            return '';
-          },
-          trigger: 'axis',
-        }
-      };
+            return []; // Return an empty array if not successful
+        })
+    ).subscribe(projects => {
+        const filteredProjects: master[] = projects.filter(p => {
+            const projectStartYear = (p.ProjectStart as Date).getFullYear();
+            return projectStartYear === year || projectStartYear === year - 1;
+        });
 
-      this.chart?.setOption(this.chartOption);
-      this.chart?.on('click', (params) => {
-        this.onChartClick(params);
-      });
+        const monthsInYear = this.getMonthsInYear(year);
+        const monthData = this.getMonthData(filteredProjects, monthsInYear);
+
+        this.chartOption = {
+            xAxis: {
+                type: 'category',
+                data: monthsInYear
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: monthData.map(d => d.totalCost || 0),
+                type: 'bar',
+                itemStyle: { color: '#42A5F5' }
+            }],
+            tooltip: {
+                formatter: (params: any) => {
+                    const month = monthData.find(d => d.month === params.name);
+                    if (month) {
+                        const totalCost = month.projects.reduce((sum, project) => sum + (project.cost || 0), 0);
+                        return `Total Cost: ${totalCost} THB<br>${month.projects.map(p => `${p.ProjectName}: ${p.cost || 0} THB`).join('<br>')}`;
+                    }
+                    return '';
+                },
+                trigger: 'axis',
+            }
+        };
+
+        this.chart?.setOption(this.chartOption);
+        this.chart?.on('click', (params) => {
+            this.onChartClick(params);
+        });
+    }, error => {
+        console.error('Error fetching project details:', error);
     });
-  }
+}
 
-  calculateMandays(module: Module): number {
-    const startDate = new Date(module.addDate);
-    const dueDate = new Date(module.dueDate);
+
+  calculateMandays(module: rModule): number {
+    const startDate = new Date(module.ModuleAddDate);
+    const dueDate = new Date(module.ModuleDueDate);
     const diffTime = Math.abs(dueDate.getTime() - startDate.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
   }
 
-  calculateTotalCost(project: Projects): number {
+  calculateTotalCost(project: master): number {
     if (!project.modules) {
-      console.error(`Project: ${project.name}, modules data is missing`);
+      console.error(`Project: ${project.ProjectName}, modules data is missing`);
       return 0;
     }
-
+  
     const totalCost = project.modules.reduce((total, module) => {
-      if (!module.employees) {
-        console.error(`Module: ${module.moduleName}, employees data is missing`);
+      if (!module.Employees) {
+        console.error(`Module: ${module.ModuleName}, employees data is missing`);
         return total;
       }
-
+  
       const mandays = this.calculateMandays(module);
-      const moduleCost = mandays * module.employees.reduce((moduleTotal, employee) => {
-        return moduleTotal + (employee.emCost || 0);
+      const moduleCost = mandays * module.Employees.reduce((moduleTotal, employee) => {
+        return moduleTotal + (employee.EmployeeCost || 0); // Assuming this is a number
       }, 0);
-
+  
       return total + moduleCost;
     }, 0);
-
+  
     return totalCost;
-  }
+  }  
 
   getMonthsInYear(year: number): string[] {
     const months: string[] = [];
@@ -191,16 +218,16 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
     ][monthIndex];
   }
 
-  getMonthData(projects: Projects[], monthsInYear: string[]): { month: string, totalCost: number, projects: Projects[] }[] {
-    const monthMap = new Map<string, { totalCost: number, projects: Projects[] }>();
+  getMonthData(projects: master[], monthsInYear: string[]): { month: string, totalCost: number, projects: master[] }[] {
+    const monthMap = new Map<string, { totalCost: number, projects: master[] }>();
 
     monthsInYear.forEach(month => {
       monthMap.set(month, { totalCost: 0, projects: [] });
     });
 
     projects.forEach(p => {
-      const projectYear = p.createdDate.getFullYear();
-      const projectMonthIndex = p.createdDate.getMonth();
+      const projectYear = p.ProjectStart.getFullYear();
+      const projectMonthIndex = p.ProjectStart.getMonth();
 
       monthsInYear.forEach((month, index) => {
         if (projectYear < this.currentYear || (projectYear === this.currentYear && index >= projectMonthIndex)) {
@@ -229,13 +256,20 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
   onChartClick(event: any): void {
     const clickedMonth = event.name;
 
-    this.projectService.getMockProjects().pipe(
-      map(projects => projects.map(p => ({
+    this.apiService.getApi<master[]>('getdetail').pipe(
+      map(response => response.data.map(p => ({
         ...p,
-        createdDate: new Date(p.createdDate)
+        ProjectID: p.ProjectID,
+            ProjectName: p.ProjectName,
+            ProjectStart: new Date(p.ProjectStart), 
+            ProjectEnd: new Date(p.ProjectEnd),     
+            ProjectStatus: p.ProjectStatus,   
+            employees: p.employees,
+            cost: this.calculateTotalCost(p),
       }))),
       map(projects => {
-        const monthsData = this.getMonthData(projects, this.getMonthsInYear(this.currentYear));
+        const monthInYear = this.getMonthsInYear(this.currentYear);
+        const monthsData = this.getMonthData(projects, monthInYear);
         return monthsData.map(month => ({
           ...month,
           totalCost: month.projects.reduce((sum, p) => sum + (p.cost ?? 0), 0)
@@ -243,10 +277,13 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
       take(1)
     ).subscribe(monthData => {
-      const clickedMonthData = monthData.find(d => d.month === clickedMonth);
-      if (clickedMonthData) {
-        this.chartItemClicked.emit(clickedMonthData);
+      const clickedMonthData = monthData.find(d => d.month === clickedMonth );
+      if(clickedMonth) {
+        this.chartItemClicked.emit(clickedMonth);
       }
-    });
+    }, error => {
+      console.error('Error :', error);
+    })
   }
+
 }
