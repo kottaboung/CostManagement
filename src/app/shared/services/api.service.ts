@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { ApiResponse } from '../../core/interface/response.interface';
 
 @Injectable({
@@ -13,7 +13,9 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   getApi<T>(path:string): Observable<ApiResponse<T>> {
-    return this.http.get<ApiResponse<T>>(`${this.apiUrl}/${path}`);
+    return this.http.get<ApiResponse<T>>(`${this.apiUrl}/${path}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getParamApi<T>(path: string, params?: any): Observable<ApiResponse<T>> {
@@ -26,11 +28,20 @@ export class ApiService {
       });
     }
 
-    return this.http.get<ApiResponse<T>>(`${this.apiUrl}/${path}`, { params: httpParams });
+    return this.http.get<ApiResponse<T>>(`${this.apiUrl}/${path}`, { params: httpParams }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   postApi<T, U>(path:string, body: U): Observable<ApiResponse<T>> {
-    return this.http.post<ApiResponse<T>>(`${this.apiUrl}/${path}`, body);
+    return this.http.post<ApiResponse<T>>(`${this.apiUrl}/${path}`, body).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: any) {
+    console.error('API Error:', error);
+    return throwError(() => new Error(error.message || 'Something went wrong with the API'));
   }
 
 }
