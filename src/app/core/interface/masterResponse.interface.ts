@@ -8,6 +8,7 @@ export interface master {
     ProjectStatus : number,
     modules : rModule[],
     employees : rEmployee[],
+    cost?:number
 }
 
 export interface MasterResponse

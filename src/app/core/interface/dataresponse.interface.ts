@@ -18,7 +18,7 @@ export interface rEmployee {
     ProjectName: string;
     ProjectStart: Date;
     ProjectEnd: Date;
-    ProjectStatus: boolean;
+    ProjectStatus: number;
     cost?: number;
     detail: any
   }

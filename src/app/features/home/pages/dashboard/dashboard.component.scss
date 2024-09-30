@@ -14,6 +14,21 @@
     transition: transform 0.5s ease;
   }
   
+  .custom-btn {
+    border-radius: 100%;
+    align-self: center;
+    text-align: center;
+    border: none;
+    color: white;
+    background-color: primary;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .custom-btn:hover {
+    scale: 1.05;
+  }
+
   .of {
     overflow-x: hidden;
   }

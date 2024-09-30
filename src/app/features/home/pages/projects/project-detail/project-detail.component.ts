@@ -23,7 +23,7 @@ export class ProjectDetailComponent implements OnInit {
   public pageName: string = "";
   public projectName: string | null = null;
   public projects?: master; 
-  @Input() Project: rProjects | null = null; 
+  @Input() Project: master | null = null; 
   @Input() public active: boolean = true;
 
   constructor(
@@ -50,8 +50,8 @@ export class ProjectDetailComponent implements OnInit {
     }
 
     this.apiService.getApi<master[]>('getdetail').subscribe({
-        next: (response: ApiResponse<master[]>) => {  // Ensure this matches ApiResponse<master[]>
-            const projects: master[] = response.data; // Access projects directly from response.data
+        next: (response: ApiResponse<master[]>) => { 
+            const projects: master[] = response.data; 
             this.project = projects.find(p => p.ProjectName === this.projectName);
 
             console.log(`Project ${this.project?.ProjectName}`);
@@ -61,7 +61,7 @@ export class ProjectDetailComponent implements OnInit {
 
                 this.projectDetails = [
                     { label: 'Name', value: this.project.ProjectName },
-                    { label: 'Cost', value: this.calTotalCost(this.project) },
+                    { label: 'Cost', value: 0 || this.calTotalCost(this.project)},
                     { label: 'Created Date', value: startDate },
                     { label: 'Status', value: this.project.ProjectStatus === 1 ? 'Active' : 'Inactive' }
                 ];
@@ -75,7 +75,6 @@ export class ProjectDetailComponent implements OnInit {
         }
     });
 }
-
 
 calTotalCost(project: master): number {
   if(!project.modules || project.modules.length === 0) {

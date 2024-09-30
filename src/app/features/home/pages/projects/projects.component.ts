@@ -7,9 +7,10 @@ import { ProjectService } from '../../../../shared/services/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectModalComponent } from '../../../../shared/modals/project-modal/project-modal.component';
 import { ApiService } from '../../../../shared/services/api.service';
-import { rProjects } from './../../../../core/interface/dataresponse.interface';
+import { rModule, rProjects } from './../../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../../core/interface/response.interface';
 import { error } from 'console';
+import { master } from '../../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-projects',
@@ -19,25 +20,26 @@ import { error } from 'console';
 export class ProjectsComponent implements OnInit {
   columns = [
     { title: 'Project Name', prop: 'ProjectName', sortable: true, width: 300 },
-    { title: 'Cost', prop: 'cost', sortable: true, width: 250 },
+    { title: 'Cost', prop: 'cost' , sortable: true, width: 250 },
     { title: 'Created Date', prop: 'ProjectStart', sortable: true, width: 150 },
     { title: 'End Date', prop: 'ProjectEnd', sortable: true, width: 150 },
     { title: 'Status', prop: 'ProjectStatus', sortable: false, width: 200 },
     { title: 'Detail', prop: 'detail', sortable: false, width: 100 }
   ];
   
-  rows: Projects[] = []; // Ensure it's an empty array initially
+  rows: rProjects[] = []; // Ensure it's an empty array initially
   
   @Output() currentStep: number = 1;
-  Project: rProjects | null = null;
-  projects: rProjects[] = [];
+  Project: master | null = null;
+  projects: master[] = [];
   @Input() projectName: string = '';
-  real_projects: rProjects[] =[];
+  master: master[] =[];
+  real_projects: rProjects[]=[];
+  projectCost: number = 0;
 
   constructor(
     private loading: LoadingService, 
     private apiService: ApiService,
-    private http: HttpClient, 
     private projectService: ProjectService, 
     private dialog: MatDialog) {
     
@@ -64,7 +66,7 @@ export class ProjectsComponent implements OnInit {
     //   this.loading.hideLoading();
     // }, 300);
     setTimeout(() => {
-      this.getProject();
+      this.loadProj();
       this.loading.hideLoading();
     }, 300);
   }
@@ -93,13 +95,14 @@ export class ProjectsComponent implements OnInit {
 //   );
 // }
 
-getProject(): void {
-  this.apiService.getApi<rProjects[]>('getprojects').subscribe({
-    next: (res: ApiResponse<rProjects[]>) => {
-      if (res.status === 'success') {
-        this.real_projects = res.data;
-        res.data.map((name) => {
-          this.projectName = name.ProjectName
+loadProj() :void{
+  this.apiService.getApi<master[]>('getdetail').subscribe({
+    next:(res: ApiResponse<master[]>) => {
+      if(res.status === 'sucess') {
+        this.master = res.data;
+        console.log('load proj',this.master)
+        res.data.map((project) => {
+          this.projectName = project.ProjectName
         })
       } else {
         console.error(res.message);
@@ -111,11 +114,29 @@ getProject(): void {
   });
 }
 
+// getProject(): void {
+//   this.apiService.getApi<rProjects[]>('getprojects').subscribe({
+//     next: (res: ApiResponse<rProjects[]>) => {
+//       if (res.status === 'success') {
+//         //this.real_projects = res.data;
+//         res.data.map((name) => {
+//           //this.projectName = name.ProjectName
+//         })
+//       } else {
+//         console.error(res.message);
+//       }
+//     },
+//     error: (error) => {
+//       console.error('An error occurred:', error);
+//     },
+//   });
+// }
+
 // addProject(): void {
 
 // }
 
-  onDetailClick(project: rProjects): void {
+  onDetailClick(project: master): void {
     console.log(this.currentStep);
     
     if (project.ProjectName) {

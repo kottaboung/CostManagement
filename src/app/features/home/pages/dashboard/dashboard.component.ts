@@ -6,6 +6,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { title } from 'node:process';
+import { master, MasterResponse } from '../../../../core/interface/masterResponse.interface';
+import { ApiService } from '../../../../shared/services/api.service';
+import { ApiResponse } from './../../../../core/interface/response.interface';
+import { rEmployee } from './../../../../core/interface/dataresponse.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +22,7 @@ export class DashboardComponent implements OnInit {
   chartData: any;
   selectedYear: number = 2024;
   isLoading: boolean = false;
+  public projects?: master[]
 
   currentsIndex = 0;
   visibleCards = 3;
@@ -27,7 +32,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private loadingService: LoadingService,
     private dialog: MatDialog,
-    private http: HttpClient
+    private http: HttpClient,
+    private apiService: ApiService
   ) {}
 
   public cards = [
@@ -59,23 +65,49 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.loadingService.showLoading();
     this.isLoading = true;
-    this.loadMockProjects().subscribe(projects => {
-      this.updateChartData(this.selectedYear, projects);
-      this.loadingService.hideLoading();
-      this.isLoading = false;
+    
+    this.loadProjects().subscribe({
+      next: (projects) => {
+        this.updateChartData(this.selectedYear, projects);
+        this.loadingService.hideLoading();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading projects', err);
+        this.loadingService.hideLoading();
+        this.isLoading = false;
+      }
     });
   }
-
-  loadMockProjects(): Observable<any[]> {
-    return this.http.get<any[]>(this.mockProjectsUrl).pipe(
-      map(projects => projects.map(p => ({
-        ...p,
-        
-        createdDate: new Date(p.createdDate)
-        
-      })))
+  
+  loadProjects(): Observable<master[]> {
+    return this.apiService.getApi<MasterResponse>('getdetail').pipe(
+      map((response: ApiResponse<MasterResponse>) => {  // Correctly annotate as ApiResponse<MasterResponse>
+        const projects = response.data;  // Access the data property
+  
+        if (Array.isArray(projects)) {
+          return projects.map(p => ({
+            ProjectID: p.ProjectID,
+            ProjectName: p.ProjectName,
+            ProjectStart: new Date(p.ProjectStart), // Convert to Date object
+            ProjectEnd: new Date(p.ProjectEnd),     // Convert to Date object
+            ProjectStatus: p.ProjectStatus,         // Already a number
+            modules: p.modules || [],               // Default to empty array if no modules
+            employees: p.employees ? p.employees.map((emp: rEmployee) => ({
+              EmployeeID: emp.EmployeeID,
+              EmployeeName: emp.EmployeeName,
+              EmployeePosition: emp.EmployeePosition || '', // Default to empty string if null
+              EmployeeCost: emp.EmployeeCost !== null ?? 0 // Handle null cost
+            })) : [] // Default to empty array if no employees
+          }));
+        }
+  
+        // Return an empty array if projects is not an array
+        return [];
+      })
     );
   }
+  
 
   updateChartData(year: number, projects: any[]) {
     this.loadingService.showLoading();
@@ -105,6 +137,6 @@ export class DashboardComponent implements OnInit {
 
   changeYear(year: number) {
     this.selectedYear = year;
-    this.loadMockProjects().subscribe(projects => this.updateChartData(year, projects));
+    this.loadProjects().subscribe(projects => this.updateChartData(year, projects));
   }
 }
