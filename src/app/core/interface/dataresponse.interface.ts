@@ -12,6 +12,8 @@ export interface rEmployee {
     ModuleDueDate: Date;
     ModuleActive: boolean;
     Employees: rEmployee[];
+    mCost? :number;
+    mandays? :number;
   }
   
   export interface rProjects {

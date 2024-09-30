@@ -51,27 +51,44 @@ export class TableComponent implements OnInit, AfterViewInit {
     if (this.dataTable === 'projects') {
       this.getProjectsFromApi(); 
     } else if (this.projectName && this.dataTable === 'modules') {
-      this.loadModule();
-    } else {
       console.warn('projectName is required for modules or employees data!');
     }
   }
+
 
   status(value: any): string {
     return value === 0 ? 'working' : 'Go alive';
   }  
   
   getProjectsFromApi(): void {
-    this.apiservice.getApi<master[]>('getprojects').subscribe({
+    this.apiservice.getApi<master[]>('getdetail').subscribe({
       next: (res: ApiResponse<master[]>) => {
         if (res.status === 'success') {
-          this.rows = res.data.map(p => ({
-            ...p,
-            ProjectStart: new Date(p.ProjectStart),
-            ProjectEnd: new Date(p.ProjectEnd),
-            cost: this.calTotalCost(p)
-          }));
-          console.log('Loaded real projects:', this.rows);
+          // Assuming res.data contains an array of projects
+          this.rows = res.data.map(p => {
+            // Process the project details
+            const projectDetails = {
+              ...p,
+              ProjectStart: new Date(p.ProjectStart),
+              ProjectEnd: new Date(p.ProjectEnd),
+              cost: this.calTotalCost(p),
+            };
+  
+            // Map modules within the project
+            const modules = p.modules.map(m => ({
+              ...m,
+              ModuleAddDate: new Date(m.ModuleAddDate),
+              ModuleDueDate: new Date(m.ModuleDueDate),
+            }));
+  
+            // Return combined project details and modules
+            return {
+              ...projectDetails,
+              modules, // Add modules to the project
+            };
+          });
+  
+          console.log('Loaded real projects with modules:', this.rows);
         } else {
           console.error(res.message);
         }
@@ -81,28 +98,29 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  
 
-  loadModule(): void{
-    this.apiservice.getApi<rModule[]>('GetAllModule').subscribe({
-      next: (res: ApiResponse<rModule[]>) => {
-        if(res.status === 'success') {
-          this.rows = res.data.map(m => ({
-            ...m,
-            ModuleName: m.ModuleName,
-            ModuleAddDate: new Date(m.ModuleAddDate),
-            ModuleDueDate: new Date(m.ModuleDueDate),
-            ModuleActive: m.ModuleActive
-          }));
-          console.log('Loaded module', this.rows);
-        } else {
-          console.error(res.message);
-        }
-      },
-      error: (error) => {
-        console.error('error occured while fetching module', error);
-      }
-    })
-  }
+  // loadModule(): void{
+  //   this.apiservice.getApi<rModule[]>('GetAllModule').subscribe({
+  //     next: (res: ApiResponse<rModule[]>) => {
+  //       if(res.status === 'success') {
+  //         this.rows = res.data.map(m => ({
+  //           ...m,
+  //           ModuleName: m.ModuleName,
+  //           ModuleAddDate: new Date(m.ModuleAddDate),
+  //           ModuleDueDate: new Date(m.ModuleDueDate),
+  //           ModuleActive: m.ModuleActive
+  //         }));
+  //         console.log('Loaded module', this.rows);
+  //       } else {
+  //         console.error(res.message);
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('error occured while fetching module', error);
+  //     }
+  //   })
+  // }
   
   
   // loadDetailsFromApi(): void {
