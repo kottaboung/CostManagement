@@ -1,6 +1,6 @@
 <div>
   <!-- Year Selection -->
-  <select class="form-select col-2" [(ngModel)]="selectedYear" (change)="onYearChange($event)">
+  <select class="form-select col-1" [(ngModel)]="selectedYear" (change)="onYearChange($event)">
     <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
   </select>
 

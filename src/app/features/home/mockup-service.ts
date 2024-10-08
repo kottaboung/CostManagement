@@ -1,22 +1,23 @@
 
+import { masterData, masterDataModule } from '../../core/interface/masterResponse.interface';
 import { Module, Projects } from './mockup-interface';
 
-function calculateMandays(module: Module): number {
-  const startDate = new Date(module.addDate);
-  const dueDate = new Date(module.dueDate);
+function calculateMandays(module: masterDataModule): number {
+  const startDate = new Date(module.ModuleAddDate);
+  const dueDate = new Date(module.ModuleDueDate);
   const diffTime = Math.abs(dueDate.getTime() - startDate.getTime());
   const mandays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
   return mandays;
 }
 
-export function calculateTotalCost(project: Projects): number {
-  const moduleCosts = project.modules.reduce((total, module) => {
+export function calculateTotalCost(project: masterData): number {
+  const moduleCosts = project.Modules.reduce((total, module) => {
     const mandays = calculateMandays(module);
-    const employeeCost = module.employees.reduce((moduleTotal, employee) => moduleTotal + employee.emCost, 0);
+    const employeeCost = module.Employees.reduce((moduleTotal, employee) => moduleTotal + employee.EmployeeCost, 0);
     return total + (employeeCost * mandays); 
   }, 0);
 
-  const employeeCosts = project.employees ? project.employees.reduce((total, employee) => total + employee.emCost, 0) : 0;
+  const employeeCosts = project.ProjectEmployee ? project.ProjectEmployee.reduce((total, employee) => total + employee.EmployeeCost, 0) : 0;
 
   return moduleCosts + employeeCosts;
 }
