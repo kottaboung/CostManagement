@@ -5,10 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { calculateTotalCost } from '../../../mockup-service';
 import { rModule, rProjects } from '../../../../../core/interface/dataresponse.interface';
 import { ApiService } from '../../../../../shared/services/api.service';
-import { master, MasterResponse } from '../../../../../core/interface/masterResponse.interface';
 import { reduce } from 'rxjs';
 import { error } from 'console';
 import { ApiResponse } from '../../../../../core/interface/response.interface';
+import { masterData } from '../../../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-project-detail',
@@ -16,14 +16,14 @@ import { ApiResponse } from '../../../../../core/interface/response.interface';
   styleUrls: ['./project-detail.component.scss'],
 })
 export class ProjectDetailComponent implements OnInit {
-  public project: master | undefined;
+  public project: masterData | undefined;
   @Input() currentStep = 2;
   public projectDetails: { label: string, value: string | number | any }[] = [];
   public page = 1;
   public pageName: string = "";
   public projectName: string | null = null;
-  public projects?: master; 
-  @Input() Project: master | null = null; 
+  public projects?: masterData; 
+  @Input() Project: masterData | null = null; 
   @Input() public active: boolean = true;
 
   constructor(
@@ -49,9 +49,9 @@ export class ProjectDetailComponent implements OnInit {
         return;
     }
 
-    this.apiService.getApi<master[]>('getdetail').subscribe({
-        next: (response: ApiResponse<master[]>) => { 
-            const projects: master[] = response.data; 
+    this.apiService.getApi<masterData[]>('getdetail').subscribe({
+        next: (response: ApiResponse<masterData[]>) => { 
+            const projects: masterData[] = response.data; 
             this.project = projects.find(p => p.ProjectName === this.projectName);
 
             console.log(`Project ${this.project?.ProjectName}`);
@@ -61,7 +61,7 @@ export class ProjectDetailComponent implements OnInit {
 
                 this.projectDetails = [
                     { label: 'Name', value: this.project.ProjectName },
-                    { label: 'Cost', value: 0 || this.calTotalCost(this.project)},
+                    //{ label: 'Cost', value: 0 || this.calTotalCost(this.project)},
                     { label: 'Created Date', value: startDate },
                     { label: 'Status', value: this.project.ProjectStatus === 1 ? 'Active' : 'Inactive' }
                 ];
@@ -76,22 +76,22 @@ export class ProjectDetailComponent implements OnInit {
     });
 }
 
-calTotalCost(project: master): number {
-  if(!project.modules || project.modules.length === 0) {
-    return 0;
-  }
-  if(!project.employees || project.employees.length === 0) {
-    return 0;
-  }
-  const moudleCost = project?.modules.reduce((total, module) => {
-    const mandays = this.findmanday(module);
-    const emCost = module?.Employees.reduce((moduleTotal, employee) => moduleTotal + employee.EmployeeCost, 0);
-    return total + (emCost * mandays);
-  }, 0);
+// calTotalCost(project: masterData): number {
+//   if(!project.modules || project.modules.length === 0) {
+//     return 0;
+//   }
+//   if(!project.employees || project.employees.length === 0) {
+//     return 0;
+//   }
+//   const moudleCost = project?.modules.reduce((total, module) => {
+//     const mandays = this.findmanday(module);
+//     const emCost = module?.Employees.reduce((moduleTotal, employee) => moduleTotal + employee.EmployeeCost, 0);
+//     return total + (emCost * mandays);
+//   }, 0);
 
-  const employeeCosts = project.employees ? project.employees.reduce((total, employees) => total + employees.EmployeeCost, 0) :0;
-  return moudleCost + employeeCosts;
-}
+//   const employeeCosts = project.employees ? project.employees.reduce((total, employees) => total + employees.EmployeeCost, 0) :0;
+//   return moudleCost + employeeCosts;
+// }
 
 findmanday(module: rModule): number{
   const start = new Date(module.ModuleAddDate);

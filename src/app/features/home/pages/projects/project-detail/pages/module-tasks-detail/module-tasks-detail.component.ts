@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { rModule } from '../../../../../../../core/interface/dataresponse.interface';
 import { ApiService } from '../../../../../../../shared/services/api.service';
-import { master } from '../../../../../../../core/interface/masterResponse.interface';
+import { masterData } from '../../../../../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-module-tasks-detail',
@@ -40,7 +40,7 @@ export class ModuleTasksDetailComponent implements OnInit{
 
   loadModule(): void {
     // Call the API to get the project details
-    this.apiService.getApi<{ status: string; message: string; data: master[] }>('getdetail').subscribe(res => {
+    this.apiService.getApi<{ status: string; message: string; data: masterData[] }>('getdetail').subscribe(res => {
       // Log the response to check its structure
       console.log('API Response:', res);
 
