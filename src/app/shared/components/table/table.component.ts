@@ -8,7 +8,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { ApiService } from '../../services/api.service';
 import { rModule, rProjects } from '../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../core/interface/response.interface';
-import { master } from '../../../core/interface/masterResponse.interface';
+import { masterData } from '../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-table',
@@ -22,7 +22,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() columns: any[] = [];
   @Input() dataTable: 'projects' | 'modules' | 'employees' = 'projects';
   @Output() projectName?: string;
-  @Output() detailClick: EventEmitter<master> = new EventEmitter<master>();
+  @Output() detailClick: EventEmitter<masterData> = new EventEmitter<masterData>();
   //@ViewChild(DatatableComponent) table: DatatableComponent;
 
   constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef, private apiservice: ApiService) { }
@@ -61,8 +61,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   }  
   
   getProjectsFromApi(): void {
-    this.apiservice.getApi<master[]>('getdetail').subscribe({
-      next: (res: ApiResponse<master[]>) => {
+    this.apiservice.getApi<masterData[]>('GetMasterData').subscribe({
+      next: (res: ApiResponse<masterData[]>) => {
         if (res.status === 'success') {
           // Assuming res.data contains an array of projects
           this.rows = res.data.map(p => {
@@ -71,11 +71,11 @@ export class TableComponent implements OnInit, AfterViewInit {
               ...p,
               ProjectStart: new Date(p.ProjectStart),
               ProjectEnd: new Date(p.ProjectEnd),
-              cost: this.calTotalCost(p),
+              //cost: this.calTotalCost(p),
             };
   
             // Map modules within the project
-            const modules = p.modules.map(m => ({
+            const modules = p.Modules.map(m => ({
               ...m,
               ModuleAddDate: new Date(m.ModuleAddDate),
               ModuleDueDate: new Date(m.ModuleDueDate),
@@ -158,22 +158,22 @@ export class TableComponent implements OnInit, AfterViewInit {
   // }
   
   
-  calTotalCost(project: master): number {
-    if(!project.modules || project.modules.length === 0) {
-      return 0;
-    }
-    if(!project.employees || project.employees.length === 0) {
-      return 0;
-    }
-    const moudleCost = project?.modules.reduce((total, module) => {
-      const mandays = this.findmanday(module);
-      const emCost = module?.Employees.reduce((moduleTotal, employee) => moduleTotal + employee.EmployeeCost, 0);
-      return total + (emCost * mandays);
-    }, 0);
+  // calTotalCost(project: masterData): number {
+  //   if(!project.Modules || project.Modules.length === 0) {
+  //     return 0;
+  //   }
+  //   if(!project.employees || project.employees.length === 0) {
+  //     return 0;
+  //   }
+  //   const moudleCost = project?.modules.reduce((total, module) => {
+  //     const mandays = this.findmanday(module);
+  //     const emCost = module?.Employees.reduce((moduleTotal, employee) => moduleTotal + employee.EmployeeCost, 0);
+  //     return total + (emCost * mandays);
+  //   }, 0);
   
-    const employeeCosts = project.employees ? project.employees.reduce((total, employees) => total + employees.EmployeeCost, 0) :0;
-    return moudleCost + employeeCosts;
-  }
+  //   const employeeCosts = project.employees ? project.employees.reduce((total, employees) => total + employees.EmployeeCost, 0) :0;
+  //   return moudleCost + employeeCosts;
+  // }
   
   findmanday(module: rModule): number {
     const start = new Date(module.ModuleAddDate);
@@ -210,7 +210,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   // }
   
 
-  onDetailClick(row: master): void {
+  onDetailClick(row: masterData): void {
     console.log('Row clicked:', row); // Debugging line
     
     if (row && row.ProjectName) {

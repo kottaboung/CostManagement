@@ -10,7 +10,7 @@ import { ApiService } from '../../../../shared/services/api.service';
 import { rModule, rProjects } from './../../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../../core/interface/response.interface';
 import { error } from 'console';
-import { master } from '../../../../core/interface/masterResponse.interface';
+import { masterData } from '../../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-projects',
@@ -30,10 +30,10 @@ export class ProjectsComponent implements OnInit {
   rows: rProjects[] = []; // Ensure it's an empty array initially
   
   @Output() currentStep: number = 1;
-  Project: master | null = null;
-  projects: master[] = [];
+  Project: masterData | null = null;
+  projects: masterData[] = [];
   @Input() projectName: string = '';
-  master: master[] =[];
+  master: masterData[] =[];
   real_projects: rProjects[]=[];
   projectCost: number = 0;
 
@@ -96,8 +96,8 @@ export class ProjectsComponent implements OnInit {
 // }
 
 loadProj() :void{
-  this.apiService.getApi<master[]>('getdetail').subscribe({
-    next:(res: ApiResponse<master[]>) => {
+  this.apiService.getApi<masterData[]>('GetMasterData').subscribe({
+    next:(res: ApiResponse<masterData[]>) => {
       if(res.status === 'sucess') {
         this.master = res.data;
         console.log('load proj',this.master)
@@ -136,7 +136,7 @@ loadProj() :void{
 
 // }
 
-  onDetailClick(project: master): void {
+  onDetailClick(project: masterData): void {
     console.log(this.currentStep);
     
     if (project.ProjectName) {

@@ -1,17 +1,34 @@
-import { rEmployee, rModule, rProjects } from "./dataresponse.interface";
 
-export interface master {
-    ProjectID : number,
-    ProjectName : string,
-    ProjectStart : Date,
-    ProjectEnd : Date,
-    ProjectStatus : number,
-    modules : rModule[],
-    employees : rEmployee[],
-    cost?:number
+
+export interface masterDataResponse {
+    status: string,
+    message: string,
+    data: masterData[]
 }
 
-export interface MasterResponse
-{
-    data : master[],
+export interface masterData {
+    ProjectId: number,
+    ProjectName: string,
+    ProjectStart: Date,
+    ProjectEnd: Date,
+    ProjectStatus: number,
+    Modules: masterDataModule[]
+    ProjectCost?: number;
+}
+
+export interface masterDataModule {
+    ModuleId: number,
+    ModuleName: string,
+    ModuleAddDate: Date,
+    ModuleDueDate: Date,
+    ProjectId: number,
+    Employees: masterDataEmployee[]
+    Duration: number;
+}
+
+export interface masterDataEmployee {
+    EmployeeId: number,
+    EmployeeName: string,
+    EmployeePosition: string,
+    EmployeeCost: number
 }
