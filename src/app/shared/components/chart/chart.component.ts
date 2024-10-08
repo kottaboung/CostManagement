@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { EChartsOption } from 'echarts';
+import { EChartsOption,  } from 'echarts';
 import * as echarts from 'echarts';
 import { ApiService } from '../../../shared/services/api.service';
 import { ApiResponse } from './../../../core/interface/response.interface';
-import { YearlyData } from '../../../core/interface/chartResponse.interface';
+import { ProjectDetail, YearlyData } from '../../../core/interface/chartResponse.interface';
 
 @Component({
   selector: 'app-chart',
@@ -84,34 +84,52 @@ export class ChartComponent implements OnInit, AfterViewInit {
     this.chartInstance.clear(); // Clear the ECharts instance
   }
 
-  // Update the chart for the selected year
-updateChartForSelectedYear(data: YearlyData[], selectedYear: number): void {
-  const selectedYearData = data.find(yearData => parseInt(yearData.year, 10) === selectedYear);
+  updateChartForSelectedYear(data: YearlyData[], selectedYear: number): void {
+    const selectedYearData = data.find(yearData => parseInt(yearData.year, 10) === selectedYear);
 
-  if (selectedYearData) {
-      const monthlyTotals = selectedYearData.chart.map(monthData => parseFloat(monthData.total));
+    if (selectedYearData) {
+        const monthlyTotals = selectedYearData.chart.map(monthData => parseFloat(monthData.total));
+        const monthDetails: ProjectDetail[][] = selectedYearData.chart.map(monthData => monthData.detail);
 
-      // Prepare the series with monthly totals
-      const series: echarts.BarSeriesOption[] = [{
-          name: `Total Costs for ${selectedYear}`,
-          type: 'bar',
-          data: monthlyTotals
-      }];
+        const series: echarts.BarSeriesOption[] = [{
+            name: `Total Costs for ${selectedYear}`,
+            type: 'bar',
+            data: monthlyTotals
+        }];
 
-      // Merge the updated chart options
-      this.mergeOptions = {
-          ...this.options, // Spread existing options to retain xAxis and other configurations
-          series: series,
-          legend: {
-              data: [`Total Costs for ${selectedYear}`],
-          }
-      };
+        this.mergeOptions = {
+            ...this.options,
+            series: series,
+            legend: {
+                data: [`Total Costs for ${selectedYear}`],
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: (params: any) => { // Use 'any' temporarily for params
+                    let tooltipHtml = '';
+                    
+                    if (Array.isArray(params)) {
+                        params.forEach((param: any) => { // Use 'any' here as well
+                            const monthIndex = param.dataIndex; // Get the index for the current month's data
+                            const detail = monthDetails[monthIndex]; // Get the detail for this month
 
-      // Apply merge options to the chart
-      this.chartInstance.setOption(this.mergeOptions as any, { notMerge: false }); // Set notMerge to false to merge properly
-  } else {
-      console.warn(`No data found for the selected year: ${selectedYear}`);
-  }
+                            // Format the details
+                            const detailList = detail.map((item) => `${item.ProjectName}: ${item.Cost}`).join('<br>');
+                            tooltipHtml += `<strong>${param.name}</strong><br>${detailList}<br>`;
+                        });
+                    }
+                    return tooltipHtml;
+                },
+                position: (pos: any) => { // Use 'any' here as well
+                    return [pos[0], pos[1]];
+                }
+            }
+        };
+
+        this.chartInstance.setOption(this.mergeOptions as any, { notMerge: false });
+    } else {
+        console.warn(`No data found for the selected year: ${selectedYear}`);
+    }
 }
 
 }
