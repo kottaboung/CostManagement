@@ -29,13 +29,13 @@
           <ng-container *ngIf="col.prop === 'ProjectEnd'">
             {{ value | date:'shortDate' }}
           </ng-container>
-          <ng-container *ngIf="col.prop === 'cost'">
+          <ng-container *ngIf="col.prop === 'ProjectCost'">
             {{ value | number }} THB
           </ng-container>
-          <ng-container *ngIf="col.prop === 'Projectstatus'">
+          <ng-container *ngIf="col.prop === 'ProjectStatus'">
             {{ status(value) }}
           </ng-container>          
-          <ng-container *ngIf="col.prop !== 'detail' && col.prop !== 'ProjectStart' && col.prop !== 'ProjectEnd' && col.prop !== 'cost'">
+          <ng-container *ngIf="col.prop !== 'detail' && col.prop !== 'ProjectStart' && col.prop !== 'ProjectEnd' && col.prop !== 'ProjectCost' && col.prop !== 'ProjectStatus'">
             {{ value }}
           </ng-container>
         </ng-container>

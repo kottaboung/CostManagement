@@ -2,13 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Projects } from '../../../mockup-interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { calculateTotalCost } from '../../../mockup-service';
 import { rModule, rProjects } from '../../../../../core/interface/dataresponse.interface';
 import { ApiService } from '../../../../../shared/services/api.service';
 import { reduce } from 'rxjs';
 import { error } from 'console';
 import { ApiResponse } from '../../../../../core/interface/response.interface';
 import { masterData } from '../../../../../core/interface/masterResponse.interface';
+import { calculateTotalCost } from './../../../mockup-service';
 
 @Component({
   selector: 'app-project-detail',
@@ -49,23 +49,23 @@ export class ProjectDetailComponent implements OnInit {
         return;
     }
 
-    this.apiService.getApi<masterData[]>('getdetail').subscribe({
-        next: (response: ApiResponse<masterData[]>) => { 
+    this.apiService.getApi<masterData[]>('GetAllProjects').subscribe({
+        next: (response: ApiResponse<masterData[]>) => {
             const projects: masterData[] = response.data; 
             this.project = projects.find(p => p.ProjectName === this.projectName);
 
-            console.log(`Project ${this.project?.ProjectName}`);
-
             if (this.project) {
                 const startDate = this.formatDate(this.project.ProjectStart);
-
+                
                 this.projectDetails = [
                     { label: 'Name', value: this.project.ProjectName },
-                    //{ label: 'Cost', value: 0 || this.calTotalCost(this.project)},
+                    { label: 'ProjectCost', value: this.project.ProjectCost ? this.project.ProjectCost.toFixed(2) : 'N/A' }, // Changed here
                     { label: 'Created Date', value: startDate },
-                    { label: 'Status', value: this.project.ProjectStatus === 1 ? 'Active' : 'Inactive' }
+                    { label: 'Status', value: this.project.ProjectStatus === 1 ? 'Go A Live' : 'Working' }
                 ];
+                console.log(this.projectDetails);
             } else {
+                console.error(`Project not found: ${this.projectName}`);
                 this.router.navigate(['/projects'], { queryParams: { error: 'not-found' } });
             }
         },
@@ -76,22 +76,7 @@ export class ProjectDetailComponent implements OnInit {
     });
 }
 
-// calTotalCost(project: masterData): number {
-//   if(!project.modules || project.modules.length === 0) {
-//     return 0;
-//   }
-//   if(!project.employees || project.employees.length === 0) {
-//     return 0;
-//   }
-//   const moudleCost = project?.modules.reduce((total, module) => {
-//     const mandays = this.findmanday(module);
-//     const emCost = module?.Employees.reduce((moduleTotal, employee) => moduleTotal + employee.EmployeeCost, 0);
-//     return total + (emCost * mandays);
-//   }, 0);
 
-//   const employeeCosts = project.employees ? project.employees.reduce((total, employees) => total + employees.EmployeeCost, 0) :0;
-//   return moudleCost + employeeCosts;
-// }
 
 findmanday(module: rModule): number{
   const start = new Date(module.ModuleAddDate);
@@ -100,10 +85,7 @@ findmanday(module: rModule): number{
   const mandays = Math.ceil(diffTime / (1000 * 60 *60 /24));
   return mandays
 }
-  
-  // loadProjects(): void {
-  //   this.apiserivce.getApi()
-  // }
+
 
   private formatDate(date: Date | string): string {
     if (!date) return '';

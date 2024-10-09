@@ -14,6 +14,7 @@ export interface masterData {
     ProjectStatus: number,
     Modules: masterDataModule[]
     ProjectCost?: number;
+    ProjectEmployee?: masterDataEmployee[]
 }
 
 export interface masterDataModule {

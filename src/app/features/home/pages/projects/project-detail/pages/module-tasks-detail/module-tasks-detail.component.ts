@@ -101,25 +101,6 @@ export class ModuleTasksDetailComponent implements OnInit{
     }, 0);
   }
 
-  // loadModules(): void {
-  //   this.http.get<{ name: string; modules: Module[] }[]>('../assets/mockdata/mockData.json').subscribe(data => {
-  //     const project = data.find(p => p.name === this.projectName);
-  //     if (project) {
-  //       this.row = project.modules.map((module: Module) => {
-  //         const addDate = new Date(module.addDate);
-  //         const dueDate = new Date(module.dueDate);
-  //         console.log('Add Date:', addDate);
-  //         console.log('Due Date:', dueDate);
-  //         return {
-  //           ...module,
-  //           addDate,
-  //           dueDate
-  //         };
-  //       });
-  //     }
-  //   });
-  // }
-  
   
   
   
