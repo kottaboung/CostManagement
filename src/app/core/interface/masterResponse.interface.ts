@@ -33,3 +33,8 @@ export interface masterDataEmployee {
     EmployeePosition: string,
     EmployeeCost: number
 }
+
+export interface showModuleById {
+    project: masterData,
+    modules: masterDataModule[]
+}

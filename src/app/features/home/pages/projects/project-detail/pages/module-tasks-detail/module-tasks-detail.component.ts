@@ -4,34 +4,28 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { rModule } from '../../../../../../../core/interface/dataresponse.interface';
 import { ApiService } from '../../../../../../../shared/services/api.service';
-import { masterData } from '../../../../../../../core/interface/masterResponse.interface';
+import { masterData, masterDataModule, showModuleById } from '../../../../../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-module-tasks-detail',
   templateUrl: './module-tasks-detail.component.html',
-  styleUrl: './module-tasks-detail.component.scss'
+  styleUrls: ['./module-tasks-detail.component.scss']
 })
 export class ModuleTasksDetailComponent implements OnInit{
 
   projectName: string = '';
-  public row: rModule[] = [];
+  public row: masterDataModule[] = [];
   public columns: any[] = [
     { title: 'Module Name', prop: 'ModuleName', sortable: true, width: 400 },
     { title: 'Created Date', prop: 'ModuleAddDate', sortable: true, width: 250 },
     { title: 'Due Date', prop: 'ModuleDueDate', sortable: true, width: 250 },
-    { title: 'Manday', prop: 'mandays', sortable: true, width: 200 },
-    { title: 'Cost', prop: 'mCost', sortable: true, width: 300 },
-    { title: 'Status', prop: 'ModuleActive', sortable: false, width: 200 },
+    { title: 'Duration', prop: 'mandays', sortable: true, width: 200 },
+    { title: 'button', prop: 'detail', sortable: false }
   ];
 
-  constructor(private route: ActivatedRoute,
-    private http: HttpClient,
-    private apiService: ApiService
-    ) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient, private apiService: ApiService) { }
 
   ngOnInit(): void {
-    console.log(this.projectName);
-    
     this.route.queryParams.subscribe(params => {
       this.projectName = params['project'];
       this.loadModule();
@@ -39,46 +33,21 @@ export class ModuleTasksDetailComponent implements OnInit{
   }
 
   loadModule(): void {
-    // Call the API to get the project details
-    this.apiService.getApi<{ status: string; message: string; data: masterData[] }>('getdetail').subscribe(res => {
-      // Log the response to check its structure
+    // Prepare the request body with the project name
+    const requestBody = { ProjectName: this.projectName };
+
+    // Call the API to get the module details
+    this.apiService.postApi<showModuleById, { ProjectName: string }>('GetModuleById', requestBody).subscribe(res => {
       console.log('API Response:', res);
 
-      // Check if res.data is an array
-      if (!res.data || !Array.isArray(res.data)) {
-        console.error('Invalid data format received from the API:', res.data);
-        return;
-      }
-
-      // Log the projectName being searched
-      console.log('Searching for project:', this.projectName);
-      
-      // Find the project by the given projectName
-      const project = res.data.find(p => p.ProjectName === this.projectName);
-      
-      if (project && project.modules) { 
-        // Check if project.modules is an array
-        if (Array.isArray(project.modules)) {
-          this.row = project.modules.map((module: rModule) => {     
-            const ModuleAddDate = new Date(module.ModuleAddDate);
-            const ModuleDueDate = new Date(module.ModuleDueDate);
-            const mandays = this.calculateManDays(ModuleAddDate, ModuleDueDate);
-            const mCost = this.calculateModuleCost(module);
-            return {
-              ...module,
-              ModuleAddDate,
-              ModuleDueDate,
-              mandays,
-              mCost
-            };
-          });
-          console.log('Loaded modules:', this.row);
-        } else {
-          console.error('Project modules are not an array:', project.modules);
-        }
+      // Check if the response data contains modules
+      if (res.data && res.data.modules) {
+        this.row = res.data.modules.map(module => ({
+          ...module,
+          mandays: this.calculateManDays(new Date(module.ModuleAddDate), new Date(module.ModuleDueDate))
+        }));
       } else {
-        console.warn(`Project with name '${this.projectName}' not found or has no modules.`);
-        console.log('Available projects:', res.data.map(p => p.ProjectName)); // Log available project names
+        console.error('Invalid data format received from the API:', res.data);
       }
     }, error => {
       console.error('An error occurred while fetching module details:', error);
@@ -91,7 +60,7 @@ export class ModuleTasksDetailComponent implements OnInit{
     return mandays;
   }
 
-  calculateModuleCost(module: rModule): number {
+  calculateModuleCost(module: masterDataModule): number {
     if (!module.Employees || module.Employees.length === 0) {
       return 0;
     }
@@ -100,8 +69,4 @@ export class ModuleTasksDetailComponent implements OnInit{
       return total + (employee.EmployeeCost ?? 0);
     }, 0);
   }
-
-  
-  
-  
 }
