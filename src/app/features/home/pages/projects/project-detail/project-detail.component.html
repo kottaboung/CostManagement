@@ -17,8 +17,8 @@
           <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title">{{ detail.label }}</h5>
-              <p *ngIf="detail.label !== 'Cost'" class="card-text">{{ detail.value }}</p>
-              <p *ngIf="detail.label === 'Cost'" class="card-text">{{ detail.value | number }} THB</p>
+              <p *ngIf="detail.label !== 'ProjectCost'" class="card-text">{{ detail.value }}</p>
+              <p *ngIf="detail.label === 'ProjectCost'" class="card-text">{{ detail.value | number }} THB</p>
             </div>
           </div>
         </div>

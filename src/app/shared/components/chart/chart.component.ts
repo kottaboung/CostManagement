@@ -88,39 +88,53 @@ export class ChartComponent implements OnInit, AfterViewInit {
     const selectedYearData = data.find(yearData => parseInt(yearData.year, 10) === selectedYear);
 
     if (selectedYearData) {
-        const monthlyTotals = selectedYearData.chart.map(monthData => parseFloat(monthData.total));
+        const monthlyTotals = selectedYearData.chart.map(monthData => monthData.total);
         const monthDetails: ProjectDetail[][] = selectedYearData.chart.map(monthData => monthData.detail);
 
-        const series: echarts.BarSeriesOption[] = [{
-            name: `Total Costs for ${selectedYear}`,
-            type: 'bar',
-            data: monthlyTotals
-        }];
+        const series: echarts.BarSeriesOption[] = [];
+        const projectNames = new Set<string>();
 
+        // Gather all unique project names for the series
+        monthDetails.forEach(monthData => {
+            monthData.forEach(item => projectNames.add(item.ProjectName));
+        });
+
+        // Initialize series for each project
+        projectNames.forEach(projectName => {
+            const projectData = monthlyTotals.map((_, index) => {
+                const projectDetail = monthDetails[index].find(detail => detail.ProjectName === projectName);
+                return projectDetail ? parseFloat(projectDetail.Cost) : 0;
+            });
+
+            series.push({
+                name: projectName,
+                type: 'bar',
+                data: projectData
+            });
+        });
+
+        // Prepare the chart options
         this.mergeOptions = {
             ...this.options,
             series: series,
             legend: {
-                data: [`Total Costs for ${selectedYear}`],
+                data: Array.from(projectNames),
             },
             tooltip: {
                 trigger: 'axis',
-                formatter: (params: any) => { // Use 'any' temporarily for params
+                formatter: (params: any) => {
                     let tooltipHtml = '';
-                    
                     if (Array.isArray(params)) {
-                        params.forEach((param: any) => { // Use 'any' here as well
+                        params.forEach((param: any) => {
                             const monthIndex = param.dataIndex; // Get the index for the current month's data
-                            const detail = monthDetails[monthIndex]; // Get the detail for this month
-
-                            // Format the details
-                            const detailList = detail.map((item) => `${item.ProjectName}: ${item.Cost}`).join('<br>');
-                            tooltipHtml += `<strong>${param.name}</strong><br>${detailList}<br>`;
+                            const projectName = param.seriesName; // Get the project name from the series
+                            const cost = param.value; // Get the cost for the hovered project
+                            tooltipHtml += `<strong>${projectName}</strong><br>Cost: ${cost}<br>`;
                         });
                     }
                     return tooltipHtml;
                 },
-                position: (pos: any) => { // Use 'any' here as well
+                position: (pos: any) => {
                     return [pos[0], pos[1]];
                 }
             }
@@ -131,5 +145,6 @@ export class ChartComponent implements OnInit, AfterViewInit {
         console.warn(`No data found for the selected year: ${selectedYear}`);
     }
 }
+
 
 }

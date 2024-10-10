@@ -24,6 +24,7 @@ export class ProjectDetailComponent implements OnInit {
   public projectName: string | null = null;
   public projects?: masterData; 
   @Input() Project: masterData | null = null; 
+  public projectId: number = 0;
   @Input() public active: boolean = true;
 
   constructor(
@@ -53,10 +54,10 @@ export class ProjectDetailComponent implements OnInit {
         next: (response: ApiResponse<masterData[]>) => {
             const projects: masterData[] = response.data; 
             this.project = projects.find(p => p.ProjectName === this.projectName);
-
+            
             if (this.project) {
                 const startDate = this.formatDate(this.project.ProjectStart);
-                
+                this.projectId = this.project.ProjectId;
                 this.projectDetails = [
                     { label: 'Name', value: this.project.ProjectName },
                     { label: 'ProjectCost', value: this.project.ProjectCost ? this.project.ProjectCost.toFixed(2) : 'N/A' }, // Changed here

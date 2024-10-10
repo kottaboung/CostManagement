@@ -8,7 +8,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { ApiService } from '../../services/api.service';
 import { rModule, rProjects } from '../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../core/interface/response.interface';
-import { masterData } from '../../../core/interface/masterResponse.interface';
+import { masterData, masterDataModule } from '../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-table',
@@ -95,11 +95,16 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   
 
-  onDetailClick(row: masterData): void {
-    if (row && row.ProjectName) {
-        this.router.navigate([`/projects/${row.ProjectName}`]);
+  onDetailClick(row: masterData | masterDataModule): void {
+    if (row && (row as masterData).ProjectName) {
+        this.router.navigate([`/projects/${(row as masterData).ProjectName}`]);
+    }
+
+    if (row && (row as masterDataModule).ModuleName) {
+        console.log((row as masterDataModule).ModuleName);
     }
 }
+
 
   
   

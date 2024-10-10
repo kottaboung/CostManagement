@@ -40,6 +40,9 @@
           </ng-container>
         </ng-container>
         <ng-container *ngSwitchCase="'modules'">
+          <ng-container  *ngIf="col.prop === 'detail'">
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="onDetailClick(row)">Details</button>
+          </ng-container>
           <ng-container *ngIf="col.prop === 'ModuleAddDate'">
             {{ value | date:'shortDate' }}
           </ng-container>
@@ -49,10 +52,10 @@
           <ng-container *ngIf="col.prop === 'mandays'">
             {{ value }} days
           </ng-container>
-          <ng-container *ngIf="col.prop === 'mCost'">
+          <ng-container *ngIf="col.prop === 'ModuleCost'">
             {{ value | number }} THB
           </ng-container>
-          <ng-container *ngIf="col.prop !== 'ModuleAddDate' && col.prop !== 'ModuleDueDate' && col.prop !== 'mandays' && col.prop !== 'mCost'">
+          <ng-container *ngIf="col.prop !== 'ModuleAddDate' && col.prop !== 'ModuleDueDate' && col.prop !== 'mandays' && col.prop !== 'ModuleCost'">
             {{ value }}
           </ng-container>
         </ng-container>
