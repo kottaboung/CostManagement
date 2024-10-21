@@ -21,6 +21,8 @@ import { ProjectModalComponent } from './modals/project-modal/project-modal.comp
 import { ApiService } from './services/api.service';
 import { ModuleModalComponent } from './modals/module-modal/module-modal.component';
 import { ModalService } from './services/modal.service';
+import { DetailModalComponent } from './modals/detail-modal/detail-modal.component';
+import { NumberFormatPipe } from './pipe/number-format.pipe';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { ModalService } from './services/modal.service';
     TableComponent,
     CallendarComponent,
     ProjectModalComponent,
-    ModuleModalComponent
+    ModuleModalComponent,
+    DetailModalComponent,
+    NumberFormatPipe
   ],
   imports: [
     CommonModule,

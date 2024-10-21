@@ -7,7 +7,6 @@ import { ProjectService } from '../../../../shared/services/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectModalComponent } from '../../../../shared/modals/project-modal/project-modal.component';
 import { ApiService } from '../../../../shared/services/api.service';
-import { rModule, rProjects } from './../../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../../core/interface/response.interface';
 import { masterData, masterDataEmployee, masterDataModule } from '../../../../core/interface/masterResponse.interface';
 

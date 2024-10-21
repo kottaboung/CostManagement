@@ -1,0 +1,32 @@
+<div class="form-container">
+    <div class="d-flex justify-content-between mb-3">
+        <h5>Project Details for {{ monthName }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+    </div>
+    
+    <div *ngIf="monthDetail && monthDetail.length > 0; else noData">
+        <!-- <table class="table">
+            <thead>
+                <tr class="mb-2">
+                    <th>Project Name</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="mb-2" *ngFor="let detail of monthDetail">
+                    <td>{{ detail.ProjectName }}</td>
+                    <td>{{ detail.Cost | numberFormat }} THB</td>
+                </tr>
+            </tbody>
+        </table> -->
+
+        <div class="subscribe" *ngFor="let detail of monthDetail">
+            <span><strong>Name : </strong>{{detail.ProjectName}} <br></span>
+            <span><strong>Cost : </strong>{{detail.Cost | numberFormat}} THB</span>
+        </div>
+    </div>
+
+    <ng-template #noData>
+        <p>No project details available for this month.</p>
+    </ng-template>
+</div>
