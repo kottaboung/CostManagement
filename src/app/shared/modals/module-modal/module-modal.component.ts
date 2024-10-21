@@ -11,7 +11,7 @@ import { masterDataEmployee, masterDataModule } from '../../../core/interface/ma
 })
 export class ModuleModalComponent implements OnInit {
   @Input() moduleData?: masterDataModule;
-  @Input() totalEmployee: masterDataEmployee[] = [];
+  @Input() totalEmployee?: masterDataEmployee[];
   @Input() Projectname: string = '';
 
   moduleForm!: FormGroup; 
@@ -31,8 +31,8 @@ export class ModuleModalComponent implements OnInit {
       this.moduleForm.patchValue(this.moduleData);  // Pre-fill form for editing
       this.setEmployees(this.moduleData.Employees);  // Populate employee list
     }
-    if(!this.isEditMode && this.totalEmployee) {
-      
+    else if(!this.isEditMode && this.totalEmployee) {
+      this.setEmployees(this.totalEmployee);
     }
   }
 

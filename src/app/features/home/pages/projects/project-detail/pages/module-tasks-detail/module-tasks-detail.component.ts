@@ -11,7 +11,7 @@ import { ModalService } from '../../../../../../../shared/services/modal.service
 })
 export class ModuleTasksDetailComponent implements OnInit {
   @Output() projectname: string = '';
-  ifEmployee: masterDataEmployee[] = [];
+  @Output() ifEmployee: masterDataEmployee[] = [];
   projectName: string = '';
   public row: masterDataModule[] = [];
   public columns: any[] = [
@@ -35,32 +35,34 @@ export class ModuleTasksDetailComponent implements OnInit {
     });
   }
 
-  // fetchAvailableEmployees(): Promise<masterDataEmployee[]> {
-  //   const requestBody = { ProjectName: this.projectName };
-  //   console.log("log:",this.projectName)
+  fetchAvailableEmployees(): Promise<masterDataEmployee[]> {
+    const requestBody = { ProjectName: this.projectName };
+    console.log("log:", this.projectName);
   
-  //   return new Promise((resolve, reject) => {
-  //     this.apiService.postApi<getmasterEmployee, { ProjectName: string }>('GetEmployeeInProject', requestBody).subscribe({
-  //       next: res => {
-  //         console.log("Employee project response:", res); // Log the entire response
-  //         if (res.data && res.data.Employees) { // Change Employees to employees
-  //           // Map the employees to the expected type if necessary
-  //           this.ifEmployee = res.data.Employees.map(emp => ({
-  //             ...emp,
-  //           }));
-  //         } else {
-  //           console.error('Invalid data structure in response:', res);
-  //           reject(new Error('Invalid data structure'));
-  //         }
-  //       },
-  //       error: error => {
-  //         console.error('Error fetching employees:', error);
-  //         reject(error); 
-  //       }
-  //     });
-  //   });
-  // }
+    return new Promise((resolve, reject) => {
+      this.apiService.postApi<getmasterEmployee, { ProjectName: string }>('GetEmployeeInProject', requestBody).subscribe({
+        next: res => {
+          console.log("Employee project response:", res); // Log the entire response
   
+          // Use 'employees' (lowercase 'e') based on the response structure
+          if (res.data && res.data.employees) { 
+            // Map the employees to the expected type if necessary
+            this.ifEmployee = res.data.employees.map(emp => ({
+              ...emp,
+            }));
+            resolve(this.ifEmployee);
+          } else {
+            console.error('Invalid data structure in response:', res);
+            reject(new Error('Invalid data structure'));
+          }
+        },
+        error: error => {
+          console.error('Error fetching employees:', error);
+          reject(error); 
+        }
+      });
+    });
+  }  
   
 
   loadModule(): void {
@@ -94,17 +96,28 @@ export class ModuleTasksDetailComponent implements OnInit {
   }
 
   Createmodule(): void {
-    // const Projectname = this.projectName || "";
-    // this.fetchAvailableEmployees()
-    // if(this.availableEmployees) {
-    //   const modalRef = this.modalService.openModal(null, Projectname, this.availableEmployees); 
-    //   modalRef.result.then((result) => {
-    //     console.log('Modal closed with result:', result);
-    //   }).catch((error) => {
-    //     console.error('Modal dismissed with error:', error);
-    //   });
-    // }
+    this.fetchAvailableEmployees()
+      .then((employees: masterDataEmployee[]) => {
+        console.log("Employees fetched successfully:", employees);
+  
+        if (employees && employees.length > 0) {
+          // Pass the employees array to the modal
+          const modalRef = this.modalService.createModal(employees); 
+          modalRef.result.then((result) => {
+            console.log('Modal closed with result:', result);
+          }).catch((error) => {
+            console.error('Modal dismissed with error:', error);
+          });
+        } else {
+          console.log('No employees available to display in the modal.');
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch employees:', error);
+      });
   }
+  
+  
 
   onDetailClick(modules: masterDataModule | masterData ): void {
     if (modules) {

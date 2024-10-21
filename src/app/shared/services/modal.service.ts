@@ -24,12 +24,13 @@ export class ModalService {
     return modalRef;
   }
 
-  createModal(totalEmployee: masterDataEmployee): NgbModalRef {
+  createModal(employees: masterDataEmployee[]): NgbModalRef {
     const modalRef = this.modalService.open(ModuleModalComponent);
-
-    modalRef.componentInstance.totalEmployee = totalEmployee;
-
-    return modalRef
+  
+    // Pass the entire array of employees to the modal component
+    modalRef.componentInstance.totalEmployee = employees;
+  
+    return modalRef;
   }
 
   closeModal(modalRef: NgbModalRef): void {

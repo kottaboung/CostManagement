@@ -38,7 +38,7 @@ export interface masterDataEmployee {
 export interface getmasterEmployee {
     ProjectName: string,
     ProjectId: number,
-    Employees: masterDataEmployee[]
+    employees: masterDataEmployee[]
 }
 
 export interface showModuleById {
