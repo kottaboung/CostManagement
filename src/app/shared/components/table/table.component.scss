@@ -1,65 +1,83 @@
-// Ensure table container takes full width
-ngx-datatable {
+// Ensure table container takes full width with modern styles
+ngx-datatable.material {
   display: block;
   width: 100%;
-  overflow: auto;
+  overflow: none;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding shadow for modern look */
 }
 
-// Header styles
+ngx-datatable.material:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+// Header styles with modern look
 .datatable-header {
-  background-color: #f5f5f5;
+  background-color: #f0f0f0; /* Light gray for header */
   color: #333;
-  font-weight: bold;
+  font-weight: 600;
+  padding: 10px 15px;
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  align-items: center;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
-// Footer styles
+// Footer styles (hidden by default but styled for consistency)
 .datatable-footer {
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
   color: #333;
   text-align: center;
+  padding: 10px 15px;
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 ngx-datatable-footer {
   display: none;
 }
 
-// Body styles to ensure rows and columns stretch
+// Body styles with row hover and alternating row colors
 .datatable-body {
   display: flex;
   flex-direction: column;
   width: 100%;
   overflow: auto;
+  margin: 2px 0;
 }
 
 .datatable-row {
   display: flex;
   flex-direction: row;
   width: 100%;
+  padding: 12px; /* Larger padding for better spacing */
+  border-bottom: 1px solid #eee; /* Subtle bottom border */
 
   &:nth-child(odd) {
     background-color: #fafafa;
   }
-  
+
   &:nth-child(even) {
     background-color: #ffffff;
   }
 
   &:hover {
-    background-color: #e0e0e0;
+    background-color: #f1f1f1; /* Softer hover background */
+    transition: background-color 0.2s ease; /* Smooth hover transition */
   }
 }
 
-// Cell styles to ensure cells stretch within the row
+// Cell styles to ensure proper text alignment and spacing
 .datatable-cell {
   padding: 10px;
   text-align: left;
-  flex: 1; // Allows cells to take up equal space in the row
+  flex: 1;
+  font-size: 14px; /* Modern, smaller font */
+  color: #555; /* Softer text color */
 
   // Apply specific styles for different columns
   &.detail {
@@ -67,15 +85,28 @@ ngx-datatable-footer {
   }
 }
 
-// Button styles
+// Button styles for modern look
 .btn-primary {
   background-color: #007bff;
   border: none;
   color: white;
-  padding: 5px 10px;
-  cursor: pointer;
-  
+  padding: 6px 12px; /* Comfortable button size */
+  border-radius: 6px; /* Smooth border radius */
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
   &:hover {
     background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
   }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.5); /* Focus outline */
+  }
+}
+
+// Adjust checkbox in cells to smaller size with better alignment
+.datatable-cell input[type="checkbox"] {
+  transform: scale(0.8); /* Smaller checkbox */
+  margin-right: 10px; /* Proper spacing */
 }

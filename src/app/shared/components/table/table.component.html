@@ -16,6 +16,7 @@
     [prop]="col.prop"
     [sortable]="col.sortable"
     [width]="col.width"
+    [resizeable]="true"
   >
     <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
       <ng-container [ngSwitch]="dataTable">
@@ -41,7 +42,7 @@
         </ng-container>
         <ng-container *ngSwitchCase="'modules'">
           <ng-container  *ngIf="col.prop === 'detail'">
-            <button type="button" class="btn btn-outline-primary btn-sm" (click)="onDetailClick(row)">Details</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="onDetailClick(row)">Edit</button>
           </ng-container>
           <ng-container *ngIf="col.prop === 'ModuleAddDate'">
             {{ value | date:'shortDate' }}
@@ -72,6 +73,6 @@
   </ngx-datatable-footer>
 </ngx-datatable>
 
-<div *ngIf="!rows && !columns">
+<div *ngIf="rows.length === 0">
   <h5 class="text-center text-bold">NO DATA</h5>
 </div>

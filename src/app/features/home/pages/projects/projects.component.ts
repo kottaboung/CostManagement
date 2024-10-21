@@ -9,7 +9,7 @@ import { ProjectModalComponent } from '../../../../shared/modals/project-modal/p
 import { ApiService } from '../../../../shared/services/api.service';
 import { rModule, rProjects } from './../../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../../core/interface/response.interface';
-import { masterData } from '../../../../core/interface/masterResponse.interface';
+import { masterData, masterDataEmployee, masterDataModule } from '../../../../core/interface/masterResponse.interface';
 
 @Component({
   selector: 'app-projects',
@@ -72,16 +72,29 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  onDetailClick(project: masterData): void {
-    console.log(this.currentStep);
+  // onDetailClick(project: masterData): void {
+  //   console.log(this.currentStep);
     
-    if (project.ProjectName) {
-      this.Project = project;
+  //   if (project.ProjectName) {
+  //     this.Project = project;
+  //     this.currentStep = 2; 
+  //   } else {
+  //     console.error('Project or project name is undefined');
+  //   }
+  // }
+
+  onDetailClick(project: masterData | masterDataModule | masterDataEmployee): void {
+    console.log(this.currentStep);
+
+    if ((project as masterData).ProjectName !== undefined) {
+      const projects = project as masterData;
+      this.Project = projects;
       this.currentStep = 2; 
     } else {
-      console.error('Project or project name is undefined');
+      console.error('Event does not match expected types');
     }
   }
+
 
   onBackToProjects(): void {
     this.Project = null;

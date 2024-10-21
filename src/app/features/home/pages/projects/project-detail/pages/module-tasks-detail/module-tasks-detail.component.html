@@ -1,10 +1,13 @@
 <div>
+  <div class="d-flex justify-content-end mb-2">
+     <button class="btn btn-primary" (click)="Createmodule()">Add Module</button>
+  </div>
+   
     <app-table 
       [projectName]="projectName"
       [rows]="row" 
       [columns]="columns"
       [dataTable]="'modules'"
+      (detailClick)="onDetailClick($event)"
     ></app-table>
-    
   </div>
-  

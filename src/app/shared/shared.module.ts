@@ -19,6 +19,8 @@ import { CallendarComponent } from './components/callendar/callendar.component';
 import { LoadingService } from './services/loading.service';
 import { ProjectModalComponent } from './modals/project-modal/project-modal.component';
 import { ApiService } from './services/api.service';
+import { ModuleModalComponent } from './modals/module-modal/module-modal.component';
+import { ModalService } from './services/modal.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { ApiService } from './services/api.service';
     LoadingModalComponent,
     TableComponent,
     CallendarComponent,
-    ProjectModalComponent
+    ProjectModalComponent,
+    ModuleModalComponent
   ],
   imports: [
     CommonModule,
@@ -58,10 +61,12 @@ import { ApiService } from './services/api.service';
     ProjectModalComponent,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    ModuleModalComponent
   ],
   providers: [
     LoadingService,
+    ModalService,
     ApiService,
     provideNgxMask()
   ]
