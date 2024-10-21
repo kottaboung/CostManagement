@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { Module } from '../../../../../mockup-interface';
+import { Component, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { rModule } from '../../../../../../../core/interface/dataresponse.interface';
 import { ApiService } from '../../../../../../../shared/services/api.service';
-import { masterData, masterDataModule, showModuleById } from '../../../../../../../core/interface/masterResponse.interface';
+import { getmasterEmployee, masterData, masterDataEmployee, masterDataModule, showModuleById } from '../../../../../../../core/interface/masterResponse.interface';
+import { ModalService } from '../../../../../../../shared/services/modal.service';
 
 @Component({
   selector: 'app-module-tasks-detail',
   templateUrl: './module-tasks-detail.component.html',
   styleUrls: ['./module-tasks-detail.component.scss']
 })
-export class ModuleTasksDetailComponent implements OnInit{
-
+export class ModuleTasksDetailComponent implements OnInit {
+  @Output() projectname: string = '';
+  @Output() ifEmployee: masterDataEmployee[] = [];
   projectName: string = '';
   public row: masterDataModule[] = [];
   public columns: any[] = [
@@ -23,7 +22,11 @@ export class ModuleTasksDetailComponent implements OnInit{
     { title: 'button', prop: 'detail', sortable: false }
   ];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private apiService: ApiService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private apiService: ApiService,
+    private modalService: ModalService
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -32,41 +35,99 @@ export class ModuleTasksDetailComponent implements OnInit{
     });
   }
 
+  fetchAvailableEmployees(): Promise<masterDataEmployee[]> {
+    const requestBody = { ProjectName: this.projectName };
+    console.log("log:", this.projectName);
+  
+    return new Promise((resolve, reject) => {
+      this.apiService.postApi<getmasterEmployee, { ProjectName: string }>('GetEmployeeInProject', requestBody).subscribe({
+        next: res => {
+          console.log("Employee project response:", res); // Log the entire response
+  
+          // Use 'employees' (lowercase 'e') based on the response structure
+          if (res.data && res.data.employees) { 
+            // Map the employees to the expected type if necessary
+            this.ifEmployee = res.data.employees.map(emp => ({
+              ...emp,
+            }));
+            resolve(this.ifEmployee);
+          } else {
+            console.error('Invalid data structure in response:', res);
+            reject(new Error('Invalid data structure'));
+          }
+        },
+        error: error => {
+          console.error('Error fetching employees:', error);
+          reject(error); 
+        }
+      });
+    });
+  }  
+  
+
   loadModule(): void {
-    // Prepare the request body with the project name
     const requestBody = { ProjectName: this.projectName };
 
-    // Call the API to get the module details
-    this.apiService.postApi<showModuleById, { ProjectName: string }>('GetModuleById', requestBody).subscribe(res => {
-      console.log('API Response:', res);
+    console.log("module project :", this.projectName);
 
-      // Check if the response data contains modules
-      if (res.data && res.data.modules) {
-        this.row = res.data.modules.map(module => ({
-          ...module,
-          mandays: this.calculateManDays(new Date(module.ModuleAddDate), new Date(module.ModuleDueDate))
-        }));
-      } else {
-        console.error('Invalid data format received from the API:', res.data);
+    this.apiService.postApi<showModuleById, { ProjectName: string }>('GetModuleById', requestBody).subscribe({
+      next: res => {
+        console.log('API Response:', res);
+        this.projectname = res.data.project.ProjectName;
+        if (res.data && res.data.modules) {
+          this.row = res.data.modules.map(module => ({
+            ...module,
+            ModuleName: module.ModuleName,
+            mandays: this.calculateManDays(new Date(module.ModuleAddDate), new Date(module.ModuleDueDate))
+          }));
+        } else {
+          console.error('Invalid data format received from the API:', res.data);
+        }
+      },
+      error: error => {
+        console.error('An error occurred while fetching module details:', error);
       }
-    }, error => {
-      console.error('An error occurred while fetching module details:', error);
     });
   }
 
   calculateManDays(startDate: Date, endDate: Date): number {
     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-    const mandays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return mandays;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
-  calculateModuleCost(module: masterDataModule): number {
-    if (!module.Employees || module.Employees.length === 0) {
-      return 0;
-    }
+  Createmodule(): void {
+    this.fetchAvailableEmployees()
+      .then((employees: masterDataEmployee[]) => {
+        console.log("Employees fetched successfully:", employees);
+  
+        if (employees && employees.length > 0) {
+          // Pass the employees array to the modal
+          const modalRef = this.modalService.createModal(employees); 
+          modalRef.result.then((result) => {
+            console.log('Modal closed with result:', result);
+          }).catch((error) => {
+            console.error('Modal dismissed with error:', error);
+          });
+        } else {
+          console.log('No employees available to display in the modal.');
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch employees:', error);
+      });
+  }
+  
+  
 
-    return module.Employees.reduce((total, employee) => {
-      return total + (employee.EmployeeCost ?? 0);
-    }, 0);
+  onDetailClick(modules: masterDataModule | masterData ): void {
+    if (modules) {
+      const Projectname = this.projectName || ""; 
+      const modalRef = this.modalService.openModal(modules as masterDataModule, Projectname); 
+      modalRef.result.then((result) => {
+        console.log('Modal closed with result:', result);
+      }).catch((error) => {
+        console.error('Modal dismissed with error:', error);
+      });
+    }
   }
 }
