@@ -1,7 +1,7 @@
 <div class="home-container">
     <nav class="sidebar-left" [ngClass]="{'mini': isSidebarMini}" (click)="toggleSidebar($event)">
         <div class="sidebar-left-header m-0 p-0">
-            <p *ngIf="!isSidebarMini" class="text-name hl-text">Cost <br/> Management</p>
+            <p style="cursor: default;" *ngIf="!isSidebarMini" class="text-name hl-text">Cost <br/> Management</p>
             <div>
                 <a (click)="toggleSidebar($event)">
                     <!-- <icon-svg [path]="isSidebarMini ? 'expand' : 'collapse'" [size]="'lg'" /> -->

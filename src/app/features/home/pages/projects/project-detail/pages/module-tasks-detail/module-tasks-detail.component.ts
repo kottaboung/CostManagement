@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../../../../../../shared/services/api.service';
 import { getmasterEmployee, masterData, masterDataEmployee, masterDataModule, showModuleById } from '../../../../../../../core/interface/masterResponse.interface';
 import { ModalService } from '../../../../../../../shared/services/modal.service';
+import { title } from 'process';
 
 @Component({
   selector: 'app-module-tasks-detail',
@@ -15,10 +16,11 @@ export class ModuleTasksDetailComponent implements OnInit {
   projectName: string = '';
   public row: masterDataModule[] = [];
   public columns: any[] = [
-    { title: 'Module Name', prop: 'ModuleName', sortable: true, width: 400 },
+    { title: 'Module Name', prop: 'ModuleName', sortable: true, width: 300 },
     { title: 'Created Date', prop: 'ModuleAddDate', sortable: true, width: 250 },
     { title: 'Due Date', prop: 'ModuleDueDate', sortable: true, width: 250 },
     { title: 'Duration', prop: 'mandays', sortable: true, width: 200 },
+    { title: "Current", prop: "Current", sortable: true, width: 200},
     { title: 'button', prop: 'detail', sortable: false }
   ];
 
@@ -78,7 +80,8 @@ export class ModuleTasksDetailComponent implements OnInit {
           this.row = res.data.modules.map(module => ({
             ...module,
             ModuleName: module.ModuleName,
-            mandays: this.calculateManDays(new Date(module.ModuleAddDate), new Date(module.ModuleDueDate))
+            mandays: this.calculateManDays(new Date(module.ModuleAddDate), new Date(module.ModuleDueDate)),
+            Current: this.calculateCurrentDays(new Date(), new Date(module.ModuleDueDate))
           }));
         } else {
           console.error('Invalid data format received from the API:', res.data);
@@ -93,6 +96,12 @@ export class ModuleTasksDetailComponent implements OnInit {
   calculateManDays(startDate: Date, endDate: Date): number {
     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  calculateCurrentDays(today: Date, endDate: Date): number {
+    const diffTime = endDate.getTime() - today.getTime();
+    const remainingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return remainingDays < 0 ? 0 : remainingDays;
   }
 
   Createmodule(): void {

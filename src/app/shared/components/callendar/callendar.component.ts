@@ -8,6 +8,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { Employee, Projects } from '../../../features/home/mockup-interface';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { masterDataEmployee } from '../../../core/interface/masterResponse.interface';
 
 declare var bootstrap: any;
 @Component({
@@ -18,7 +19,7 @@ declare var bootstrap: any;
 export class CallendarComponent implements OnInit {
 
   @Input() projectName: string = '';
-  @Input() employees: Employee[] = [];
+  @Input() employees: masterDataEmployee[] = [];
   selectedEvent: any;
   eventForm: FormGroup;
   editMode: boolean = false;
@@ -52,8 +53,8 @@ export class CallendarComponent implements OnInit {
 
   private assignRandomColors(): void {
     this.employees.forEach(employee => {
-      if (!this.employeeColors[employee.id]) {
-        this.employeeColors[employee.id] = this.getRandomColor();
+      if (!this.employeeColors[employee.EmployeeId]) {
+        this.employeeColors[employee.EmployeeId] = this.getRandomColor();
       }
     });
   }

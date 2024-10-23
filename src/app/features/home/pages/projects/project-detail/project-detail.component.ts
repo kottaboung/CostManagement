@@ -18,7 +18,7 @@ import { calculateTotalCost } from './../../../mockup-service';
 export class ProjectDetailComponent implements OnInit {
   public project: masterData | undefined;
   @Input() currentStep = 2;
-  public projectDetails: { label: string, value: string | number | any }[] = [];
+  public projectDetails: { label: string, value: any }[] = [];
   public page = 1;
   public pageName: string = "";
   public projectName: string | null = null;
@@ -30,7 +30,6 @@ export class ProjectDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, 
     private router: Router, 
-    private http: HttpClient, 
     private apiService: ApiService) { }
 
   ngOnInit(): void {
@@ -45,37 +44,40 @@ export class ProjectDetailComponent implements OnInit {
 
   loadProject(): void {
     if (!this.projectName) {
-        console.error('Project name is not defined.');
-        this.router.navigate(['/projects'], { queryParams: { error: 'not-found' } });
-        return;
+      console.error('Project name is not defined.');
+      this.router.navigate(['/projects'], { queryParams: { error: 'not-found' } });
+      return;
     }
-
+  
     this.apiService.getApi<masterData[]>('GetAllProjects').subscribe({
-        next: (response: ApiResponse<masterData[]>) => {
-            const projects: masterData[] = response.data; 
-            this.project = projects.find(p => p.ProjectName === this.projectName);
-            
-            if (this.project) {
-                const startDate = this.formatDate(this.project.ProjectStart);
-                this.projectId = this.project.ProjectId;
-                this.projectDetails = [
-                    { label: 'Name', value: this.project.ProjectName },
-                    { label: 'ProjectCost', value: this.project.ProjectCost ? this.project.ProjectCost.toFixed(2) : 'N/A' }, // Changed here
-                    { label: 'Created Date', value: startDate },
-                    { label: 'Status', value: this.project.ProjectStatus === 1 ? 'Go A Live' : 'Working' }
-                ];
-                console.log(this.projectDetails);
-            } else {
-                console.error(`Project not found: ${this.projectName}`);
-                this.router.navigate(['/projects'], { queryParams: { error: 'not-found' } });
-            }
-        },
-        error: (error) => {
-            console.error('Error loading project data', error);
-            this.router.navigate(['/projects'], { queryParams: { error: 'loading-error' } });
+      next: (response: ApiResponse<masterData[]>) => {
+        const projects: masterData[] = response.data; 
+        this.project = projects.find(p => p.ProjectName === this.projectName);
+        
+        if (this.project) {
+          const startDate = this.formatDate(this.project.ProjectStart);
+          this.projectId = this.project.ProjectId;
+  
+          // Populate the projectDetails array, skipping null or undefined values
+          this.projectDetails = [
+            { label: 'Name', value: this.project.ProjectName || null },
+            { label: 'ProjectCost', value: this.project.ProjectCost ? this.project.ProjectCost.toFixed(2) : null },
+            { label: 'Created Date', value: startDate || null },
+            { label: 'Status', value: this.project.ProjectStatus === 1 ? 'Go A Live' : 'Working' }
+          ].filter(detail => detail.value); // Filter out any details with null/empty values
+  
+          console.log(this.projectDetails);
+        } else {
+          console.error(`Project not found: ${this.projectName}`);
+          this.router.navigate(['/projects'], { queryParams: { error: 'not-found' } });
         }
+      },
+      error: (error) => {
+        console.error('Error loading project data', error);
+        this.router.navigate(['/projects'], { queryParams: { error: 'loading-error' } });
+      }
     });
-}
+  }  
 
 
 

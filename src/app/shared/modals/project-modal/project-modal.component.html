@@ -1,51 +1,32 @@
-<div class="backgound container p-3">
-    <h3 class="mb-3"> <strong>Create new project</strong> </h3>
-    <div class="content">
-        <form [formGroup]="projectForm">
-        <div class="form-group mb-3">
-            <label>Project Name</label>
-            <input class="form-control"  placeholder="Enter Project Name" formControlName="projectName" type="text">
+<div class="modal-header">
+    <h5 class="modal-title">{{ isEditMode ? 'Edit Project' : 'Add Project' }}</h5>
+    <button type="button" class="btn-close" (click)="closeModal()"></button>
+  </div>
+  
+  <div class="modal-body">
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="projectName" class="form-label">Project Name</label>
+        <input id="projectName" formControlName="projectName" class="form-control" />
+      </div>
+      
+      <div class="mb-3">
+        <label for="startDate" class="form-label">Add Date</label>
+        <input type="date" id="startDate" formControlName="startDate" class="form-control" (click)="this.showPicker('startDate')" />
+      </div>
+      
+      <div class="mb-3">
+        <label for="endDate" class="form-label">Due Date</label>
+        <input type="date" id="endDate" formControlName="endDate" class="form-control" (click)="this.showPicker('endDate')" />
+        <div *ngIf="isEndDateInvalid()" class="text-danger">
+          End Date cannot be before Start Date.
         </div>
-        <div class="form-group mb-3 gap-5 d-flex ">
-            <div class="col-5">
-                 <label>Start Date</label>
-                <input class="form-control" [min]="todate" formControlName="startDate" type="date">
-            </div>
-            <div class="col-5">
-                <label>Due Date</label>
-                <input class="form-control" [min]="todate" formControlName="endDate" type="date">
-            </div>
-        </div>
-
-        <!-- <div class="form-group mb-3">
-            <div class="d-flex gap-2 mb-3">
-                <div class="col-6">
-                    <label>Employee Name</label>
-                    <input class="form-control" placeholder="Enter Employee Name" #employeeName type="text">
-                </div>
-                <div class="col-6">
-                    <label>Employee Cost</label>
-                    <input type="text" class="form-control" placeholder="Enter Employee Cost" #employeeCost>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end mb-3">
-                <button class="btn btn-outline-success" type="button" (click)="addEmployee(employeeName, employeeCost)">Add</button>
-            </div>
-        </div> -->
-
-            <!-- <div *ngIf="employees.controls.length > 0">
-                <h5>Added Employees:</h5>
-                <ul class="list-group mb-3 ova">
-                    <li *ngFor="let employee of employees.controls; let i = index" class="mb-2 shadow-sm rounded list-group-item d-flex justify-content-between align-items-center">
-                        {{ employee.get('employeeName')?.value }} &nbsp; &nbsp; - {{ employee.get('employeeCost')?.value | number }} THB
-                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeEmployee(i)"> &times;</button>
-                    </li>
-                </ul>
-            </div> -->
+      </div>      
+  
+      <div class="d-flex justify-content-end gap-2 mt-2">
+        <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="projectForm.invalid">Save</button>
+      </div>
     </form>
-    </div>
-    <div class="d-flex justify-content-end gap-3 align-items-end mb-3">
-        <button class="btn btn-success" (click)="onSubmit()" type="submit">Save</button>
-        <button class="btn btn-danger" (click)="closeModal()" type="button">Close</button>
-    </div>
-</div>
+  </div>
+  

@@ -1,5 +1,14 @@
 <div class="container">
     <div class="row">
+
+       <!-- Calendar Column -->
+       <div class="col-9">
+        <div class="p-3">
+          <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+
+
       <!-- Employees Column -->
       <div class="col-3 bg-light">
         <div class="p-4">
@@ -12,14 +21,14 @@
             <!-- Display employees -->
             <li *ngFor="let employee of employees" class="list-group-item">
               <p>
-                <strong>{{ employee.emName }} &nbsp; {{ employee.possition }}<br></strong> 
-                <strong>{{ employee.emCost | number }} THB per day</strong>
+                <strong>{{ employee.EmployeeName }} &nbsp; {{ employee.EmployeePosition }}<br></strong> 
+                <strong>{{ employee.EmployeeCost | number }} THB per day</strong>
               </p>
               <ul class="list-group mt-2">
                 <!-- Display events for each employee -->
-                <li *ngFor="let event of employeeEvents[employee.id] || []" 
+                <li *ngFor="let event of employeeEvents[employee.EmployeeId] || []" 
                   class="list-group-item"
-                  [ngStyle]="{'background-color': employeeColors[employee.id] || '#ffffff'}"
+                  [ngStyle]="{'background-color': employeeColors[employee.EmployeeId] || '#ffffff'}"
                   style="cursor: pointer;" 
                   (click)="scrollToEvent(event.id)">
                 <p>
@@ -33,12 +42,6 @@
         </div>
       </div>
       
-      <!-- Calendar Column -->
-      <div class="col-9">
-        <div class="p-3">
-          <full-calendar #calendar [options]="calendarOptions"></full-calendar>
-        </div>
-      </div>
     </div>
   </div>
 

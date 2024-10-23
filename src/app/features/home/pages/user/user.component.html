@@ -1,3 +1,23 @@
-<p>user works!</p>
 
-<button class="btn btn-danger" (click)="OnSetting()" >Go Setting Page</button>
+<div class="page">
+  <div class="header-page">
+    <h5>Employee List</h5>
+    <button class="btn btn-danger" (click)="OnSetting()">Go Setting Page</button>
+  </div>
+  
+  <div class="body-page">
+    <!-- Iterate through cards and display user information -->
+    <div *ngFor="let card of cards" class="card">
+      <div class="card-body">
+        <img [src]="card.EmployeeImage" class="card-img-top rounded-circle" width="100" height="100">
+        <h5 class="card-title">Name: {{ card.EmployeeName }}</h5>
+        <p class="card-text">Position: {{ card.EmployeePosition }}</p>
+        <p class="card-text">Cost: {{ card.EmployeeCost | numberFormat }} THB</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-page">
+    <!-- Add footer content if necessary -->
+  </div>
+</div>

@@ -33,3 +33,8 @@ export interface rEmployee {
     EmployeeID?: number;
   }
   
+  export interface ProjectDesc {
+    LastedProject: string,
+    TotalProject: number,
+    TotalCost: number
+  }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { masterDataEmployee } from '../../../../core/interface/masterResponse.interface';
 
 
 @Component({
@@ -14,6 +15,27 @@ export class UserComponent {
   ){
 
   }
+
+  cards: masterDataEmployee[] = [
+    {
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
+    },
+    {
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
+    },
+    {
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
+    },
+    {
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
+    },
+    {
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
+    },
+    {
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
+    },
+  ];
 
   OnSetting() {
     this.router.navigate(['about/setting'])

@@ -9,13 +9,13 @@ import { masterData } from '../../../../core/interface/masterResponse.interface'
   templateUrl: './chart-detail.component.html',
   styleUrl: './chart-detail.component.scss'
 })
-export class ChartDetailComponent implements OnInit{
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { month: string, totalCost: number, projects: masterData[] }) { }
+export class ChartDetailComponent { //implements OnInit{
+  // constructor(@Inject(MAT_DIALOG_DATA) public data: { month: string, totalCost: number, projects: masterData[] }) { }
 
-  ngOnInit(): void {
-    this.data.projects.map( projects => {
-      const Cost = projects.ProjectCost = calculateTotalCost(projects)
-    })
+  // ngOnInit(): void {
+  //   this.data.projects.map( projects => {
+  //     const Cost = projects.ProjectCost = calculateTotalCost(projects)
+  //   })
     
-  }
+  // }
 }

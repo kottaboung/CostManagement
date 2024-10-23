@@ -29,6 +29,7 @@ export class ModuleModalComponent implements OnInit {
 
     if (this.isEditMode && this.moduleData) {
       this.moduleForm.patchValue(this.moduleData);  // Pre-fill form for editing
+      this.moduleForm.get('ModuleAddDate')?.disable();
       this.setEmployees(this.moduleData.Employees);  // Populate employee list
     }
     else if(!this.isEditMode && this.totalEmployee) {
