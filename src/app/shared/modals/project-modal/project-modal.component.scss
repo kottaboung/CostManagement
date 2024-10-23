@@ -1,10 +1,39 @@
-.backgound{
-   height: max-content;
-   width: 500px;
-   
-}
+.form-container {
+   display: block;
+   align-items: center; 
+   position: relative;
+   background-color: #fff;
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   border-radius: 10px;
+   box-sizing: border-box;
+   padding: 20px 30px;
+ }
 
-.ova {
-   max-height: 400px;
-   overflow: auto;
-}
+ .subscribe {
+   position: relative;
+   width: 100%; /* Full width for subscription items */
+   height: max-content;
+   padding: 15px; /* Padding inside subscribe boxes */
+   background-color: #fff; /* White background */
+   border-radius: 8px; /* Rounded corners */
+   color: #333;
+   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+   margin-bottom: 15px; /* Space between subscribe items */
+   transition: transform 0.3s;
+   cursor: default;
+ }
+ 
+ /* Scale up on hover */
+ .subscribe:hover {
+   transform: scale(1.02); /* Slight scaling effect */
+ }
+ 
+ .subscribe div {
+   margin-left: 10px; /* Space between checkbox and text */
+ }
+ 
+ .subscribe span {
+   font-size: 14px; /* Smaller font size for position and cost */
+   color: #555; /* Darker color for position and cost */
+ }
+ 

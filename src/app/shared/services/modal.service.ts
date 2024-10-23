@@ -5,6 +5,8 @@ import { masterData, masterDataEmployee, masterDataModule } from '../../core/int
 import { ModuleModalComponent } from '../modals/module-modal/module-modal.component';
 import { DetailModalComponent } from '../modals/detail-modal/detail-modal.component';
 import { ProjectDetail } from '../../core/interface/chartResponse.interface';
+import { ProjectDetailComponent } from '../../features/home/pages/projects/project-detail/project-detail.component';
+import { ProjectModalComponent } from '../modals/project-modal/project-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,10 @@ export class ModalService {
     modalRef.componentInstance.totalEmployee = employees;
   
     return modalRef;
+  }
+
+  createProject(): NgbModalRef {
+    return this.modalService.open(ProjectModalComponent, { backdrop: 'static', keyboard: false });
   }
 
   openDetail(monthDetail: ProjectDetail[], monthName: string): NgbModalRef {

@@ -9,6 +9,7 @@ import { ProjectModalComponent } from '../../../../shared/modals/project-modal/p
 import { ApiService } from '../../../../shared/services/api.service';
 import { ApiResponse } from '../../../../core/interface/response.interface';
 import { masterData, masterDataEmployee, masterDataModule } from '../../../../core/interface/masterResponse.interface';
+import { ModalService } from '../../../../shared/services/modal.service';
 
 @Component({
   selector: 'app-projects',
@@ -33,18 +34,18 @@ export class ProjectsComponent implements OnInit {
   constructor(
     private loading: LoadingService, 
     private apiService: ApiService,
-    private projectService: ProjectService, 
-    private dialog: MatDialog) {}
+    private modalService: ModalService
+  ) {}
 
-  openCreateProjectModal() {
-    const dialogRef = this.dialog.open(ProjectModalComponent, {});
-
-    dialogRef.componentInstance.projectCreated.subscribe((newProject: any) => {
-      this.projectService.createProject(newProject).subscribe((project) => {
-        this.rows.push(project); // Add new project to rows
-      });
+  onCreate(): void {
+    const modalRef = this.modalService.createProject(); 
+    modalRef.result.then((result) => {
+      console.log('Modal closed with result:', result);
+    }).catch((error) => {
+      console.error('Modal dismissed with error:', error);
     });
   }
+  
 
   ngOnInit(): void {
     this.loading.showLoading();

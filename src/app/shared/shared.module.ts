@@ -66,7 +66,8 @@ import { NumberFormatPipe } from './pipe/number-format.pipe';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    ModuleModalComponent
+    ModuleModalComponent,
+    NumberFormatPipe
   ],
   providers: [
     LoadingService,

@@ -16,8 +16,8 @@ export class ChartComponent implements OnInit, AfterViewInit {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   private chartInstance!: echarts.ECharts;
 
-  availableYears: number[] = []; // List of available years
-  selectedYear: number = new Date().getFullYear(); // Default to the current year
+  availableYears: number[] = []; 
+  selectedYear: number = new Date().getFullYear();
 
   options: EChartsOption = {
     tooltip: {},
@@ -121,12 +121,17 @@ export class ChartComponent implements OnInit, AfterViewInit {
                 formatter: (params: any) => {
                     const month = monthlyLabels[params.dataIndex];
                     const totalCost = params.value;
-                    return `<strong>${month}</strong><br>Total Cost: ${totalCost} THB`;
+                    const formattedCost = totalCost.toLocaleString('en-US');
+                    return `<strong>${month}</strong><br>Total Cost: ${formattedCost} THB`;
                 }
             }
         };
 
+        // Apply the new options to the chart
         this.chartInstance.setOption(this.mergeOptions as any, { notMerge: false });
+
+        // Remove any existing click event listeners to avoid multiple triggers
+        this.chartInstance.off('click');
 
         // Add click event to display detailed information
         this.chartInstance.on('click', (params: any) => {
@@ -134,8 +139,6 @@ export class ChartComponent implements OnInit, AfterViewInit {
             const monthDetails: ProjectDetail[] = selectedYearData.chart[monthIndex].detail;
             if (monthDetails.length > 0) {
                 this.showDetailDialog(monthDetails, monthlyLabels[monthIndex]);
-            } else {
-                alert(`No projects available for ${monthlyLabels[monthIndex]}`);
             }
         });
     } else {
@@ -144,7 +147,7 @@ export class ChartComponent implements OnInit, AfterViewInit {
 }
 
   showDetailDialog(monthDetails: ProjectDetail[], monthName: string): void {
-    this.modalService.closeModal
     const modalRef = this.modalService.openDetail(monthDetails, monthName);
   }
 }
+

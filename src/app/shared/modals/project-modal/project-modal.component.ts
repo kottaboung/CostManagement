@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '../../services/api.service';
-import { rProjects } from '../../../core/interface/dataresponse.interface';
 import { ApiResponse } from '../../../core/interface/response.interface';
 import { map } from 'rxjs';
+import { masterData, masterDataEmployee, masterDataModule } from '../../../core/interface/masterResponse.interface';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-project-modal',
@@ -14,25 +15,20 @@ import { map } from 'rxjs';
 export class ProjectModalComponent {
   projectForm: FormGroup;
   minDate = Date.now();
-  todate = new Date().toString().split('T')[0]; 
+  todate = new Date().toISOString().split('T')[0];
 
-  @Output() projectCreated = new EventEmitter<any>();
+  isEditMode = false;
 
   constructor(
     private fb: FormBuilder,
     private apiserive: ApiService,
-    public dialogRef: MatDialogRef<ProjectModalComponent>
+    public activeModal: NgbActiveModal
   ) {
     this.projectForm = this.fb.group({
       projectName: ['', Validators.required],
       startDate: [this.todate, Validators.required],
-      endDate: ['',],
-      // employees: this.fb.array([])
-    });
-  }
-
-  get employees(): FormArray {
-    return this.projectForm.get('employees') as FormArray;
+      endDate: ['', Validators.required],
+    }, { validators: this.dateValidator });
   }
 
   get startDate() {
@@ -43,6 +39,19 @@ export class ProjectModalComponent {
     return this.projectForm.get('endDate')?.value;
   }
 
+  dateValidator(form: FormGroup) {
+    const startDate = form.get('startDate')?.value;
+    const endDate = form.get('endDate')?.value;
+    if (endDate && startDate && endDate < startDate) {
+      return { endDateInvalid: true };
+    }
+    return null;
+  }
+
+  isEndDateInvalid() {
+    return this.projectForm.hasError('endDateInvalid');
+  }
+
   addProject(): void {
     const { projectName , startDate, endDate } = this.projectForm.value;
     const newProject: any = {
@@ -51,10 +60,11 @@ export class ProjectModalComponent {
       "ProjectEnd": endDate,
       "ProjectStatus": false
     }
-    this.apiserive.postApi<rProjects, any>('addprojects', newProject).subscribe({
-      next: (res: ApiResponse<rProjects>) => {
+    this.apiserive.postApi<masterData, {ProjectName: string, startDate: Date}>('addprojects', newProject).subscribe({
+      next: (res: ApiResponse<masterData>) => {
         if(res.status === 'success') {
           console.log('body', res.data);
+          this.activeModal.close(res.data);
         } else {
           console.error(res.message);
         }
@@ -65,35 +75,13 @@ export class ProjectModalComponent {
     })
   }
 
-  addEmployee(employeeNameInput: HTMLInputElement, employeeCostInput: HTMLInputElement): void {
-    if (employeeNameInput.value && employeeCostInput.value) {
-      const employeeGroup = this.fb.group({
-        employeeName: [employeeNameInput.value, Validators.required],
-        employeeCost: [employeeCostInput.value, Validators.required]
-      });
-  
-      this.employees.push(employeeGroup);      
-      // Reset the input fields after adding the employee
-      employeeNameInput.value = '';
-      employeeCostInput.value = '';
-    }
-  }
-
-  // Remove employee from the FormArray
-  removeEmployee(index: number): void {
-    this.employees.removeAt(index);
-  }
-
-  onSubmit() {
+  onSubmit(): void {
     if (this.projectForm.valid) {
-
-      this.projectCreated.emit(this.projectForm.value);
       this.addProject();
-      this.closeModal();
     }
   }
 
-  closeModal() {
-    this.dialogRef.close();
+  closeModal(): void {
+    this.activeModal.dismiss('Cancel click');  
   }
 }
