@@ -12,16 +12,16 @@
       
       <div class="mb-3">
         <label for="startDate" class="form-label">Add Date</label>
-        <input type="date" id="startDate" formControlName="startDate" class="form-control" />
+        <input type="date" id="startDate" formControlName="startDate" class="form-control" (click)="this.showPicker('startDate')" />
       </div>
-  
+      
       <div class="mb-3">
         <label for="endDate" class="form-label">Due Date</label>
-        <input type="date" id="endDate" formControlName="endDate" class="form-control" />
+        <input type="date" id="endDate" formControlName="endDate" class="form-control" (click)="this.showPicker('endDate')" />
         <div *ngIf="isEndDateInvalid()" class="text-danger">
           End Date cannot be before Start Date.
         </div>
-      </div>
+      </div>      
   
       <div class="d-flex justify-content-end gap-2 mt-2">
         <button type="button" class="btn btn-danger btn-sm" (click)="closeModal()">Cancel</button>

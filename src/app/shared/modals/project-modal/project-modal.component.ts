@@ -39,6 +39,14 @@ export class ProjectModalComponent {
     return this.projectForm.get('endDate')?.value;
   }
 
+  showPicker(dateControl: string) {
+    const input = document.getElementById(dateControl) as HTMLInputElement;
+    if (input) {
+      input.focus();
+      input.click();
+    }
+  }
+
   dateValidator(form: FormGroup) {
     const startDate = form.get('startDate')?.value;
     const endDate = form.get('endDate')?.value;
@@ -48,8 +56,10 @@ export class ProjectModalComponent {
     return null;
   }
 
-  isEndDateInvalid() {
-    return this.projectForm.hasError('endDateInvalid');
+  isEndDateInvalid(): boolean {
+    const startDate = this.projectForm.get('startDate')?.value;
+    const endDate = this.projectForm.get('endDate')?.value;
+    return endDate < startDate && endDate !== '';
   }
 
   addProject(): void {

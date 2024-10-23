@@ -24,7 +24,8 @@ export interface masterDataModule {
     ModuleDueDate: Date,
     ProjectName: string,
     Employees: masterDataEmployee[]
-    Duration: number;
+    Duration: number,
+    Current: number
 }
 
 export interface masterDataEmployee {
@@ -32,7 +33,8 @@ export interface masterDataEmployee {
     EmployeeName: string,
     EmployeePosition: string,
     EmployeeCost: number,
-    InModule?: number
+    InModule?: number,
+    EmployeeImage: string
 }
 
 export interface getmasterEmployee {

@@ -18,22 +18,22 @@ export class UserComponent {
 
   cards: masterDataEmployee[] = [
     {
-      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
     },
     {
-      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
     },
     {
-      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
     },
     {
-      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
     },
     {
-      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
     },
     {
-      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0
+      EmployeeId:1 ,EmployeeName: 'name', EmployeePosition: 'dev', EmployeeCost: 0, EmployeeImage: "/src/assets/icons/User.svg"
     },
   ];
 

@@ -67,3 +67,7 @@
     transform: scale(0.95) rotateZ(1.7deg);
   }
   
+  .card-img-top {
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
