@@ -20,6 +20,8 @@ export class CallendarComponent implements OnInit {
 
   @Input() projectName: string = '';
   @Input() employees: masterDataEmployee[] = [];
+  emlist: Employee[]=[];
+  filteredEmList: Employee[] = [];
   selectedEvent: any;
   eventForm: FormGroup;
   editMode: boolean = false;
@@ -67,17 +69,96 @@ export class CallendarComponent implements OnInit {
       title: ['',Validators.required],
       start: ['',Validators.required],
       end: ['',Validators.required],
+      Evemployees: this.fb.array([]),
+      employees: [''],
       descript: [''],
-      Evemployees: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
-    
+    this.mockEmployeeList();
     if (this.projectName) {
       this.loadEvents();
       this.assignRandomColors();
     }
+  }
+
+  mockEmployeeList(): void {
+    this.emlist = [
+      { EmployeeId: 1, EmployeeName: 'John Doe' },
+      { EmployeeId: 2, EmployeeName: 'Jane Smith' },
+      { EmployeeId: 3, EmployeeName: 'Sam Johnson' },
+      { EmployeeId: 4, EmployeeName: 'Lisa Wong' }
+    ];
+    this.updateFilteredEmployeeList();
+  }
+
+  private updateFilteredEmployeeList(): void {
+    const selectedEmployeeIds = this.Evemployees.controls.map(employee => employee.get('employeeName')?.value);
+    
+    this.filteredEmList = this.emlist.filter(employee => !selectedEmployeeIds.includes(employee.EmployeeName));
+  }
+
+  // addEmployee(employeeSelect: HTMLSelectElement): void {
+  //   // const selectedEmployeeId = employeeSelect.value;
+  //   // const selectedEmployee = this.employees.find(emp => emp.EmployeeId === +selectedEmployeeId);
+  
+  //   // if (selectedEmployee) {
+  //   //   const employeeGroup = this.fb.group({
+  //   //     employeeName: [selectedEmployee.EmployeeName, Validators.required] // Use employee name in the form group
+  //   //   });
+  
+  //   //   this.Evemployees.push(employeeGroup);
+  //   //   // Reset the select field after adding the employee
+  //   //   employeeSelect.value = '';
+  //   // } else {
+  //   //   console.warn('Selected employee not found.');
+  //   // }
+
+  //   const selectedEmployeeId = employeeSelect.value;
+  //   const selectedEmployee = this.emlist.find(emp => emp.EmployeeId === +selectedEmployeeId);
+
+  //   if (selectedEmployee) {
+  //     const employeeGroup = this.fb.group({
+  //       employeeName: [selectedEmployee.EmployeeName, Validators.required] // Use employee name in the form group
+  //     });
+
+  //     this.Evemployees.push(employeeGroup);
+  //     this.updateFilteredEmployeeList();
+  //     employeeSelect.value = '';
+  //   } else {
+  //     console.warn('Selected employee not found.');
+  //   }
+  // }
+  
+
+  // Remove employee from the FormArray
+  
+  addEmployee(employeeSelect: HTMLSelectElement): void {
+    const selectedEmployeeId = employeeSelect.value;
+    const selectedEmployee = this.emlist.find(emp => emp.EmployeeId === +selectedEmployeeId);
+
+    if (selectedEmployee) {
+      const employeeGroup = this.fb.group({
+        employeeName: [selectedEmployee.EmployeeName, Validators.required]
+      });
+
+      this.Evemployees.push(employeeGroup);
+
+      // Update filtered list after adding an employee
+      this.updateFilteredEmployeeList();
+      
+      // Reset the select field after adding the employee
+      employeeSelect.value = '';
+    } else {
+      console.warn('Selected employee not found.');
+    }
+  }
+
+  
+  removeEmployee(index: number): void {
+    this.Evemployees.removeAt(index);
+    this.updateFilteredEmployeeList();
   }
 
   loadEvents(): void {
@@ -166,26 +247,6 @@ export class CallendarComponent implements OnInit {
   get Evemployees(): FormArray {
     return this.eventForm.get('Evemployees') as FormArray;
   }
-
-  addEmployee(employeeNameInput: HTMLInputElement): void {
-    if (employeeNameInput.value) {
-      const employeeGroup = this.fb.group({
-        employeeName: [employeeNameInput.value, Validators.required]
-        
-      });
-  
-      this.Evemployees.push(employeeGroup);      
-      // Reset the input fields after adding the employee
-      employeeNameInput.value = '';
-      
-    }
-  }
-
-  // Remove employee from the FormArray
-  removeEmployee(index: number): void {
-    this.Evemployees.removeAt(index);
-  }
-  
 
   saveEvent(): void {
     const eventData = this.eventForm.value;
