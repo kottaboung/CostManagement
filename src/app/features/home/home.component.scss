@@ -216,7 +216,8 @@
 
             &:hover {
                 background-color: rgba(255, 255, 255, 0.35);
-                transform: rotate(90deg);
+                //transform: rotate(90deg);
+                transform: scale(1.1);
             }
         }
     }
@@ -284,9 +285,9 @@
                     border-radius: 8px;
                     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
             
-                    &:hover {
-                        transform: rotate(16deg);
-                    }
+                    // &:hover {
+                    //     transform: rotate(16deg);
+                    // }
                 }
 
                 li {
@@ -320,10 +321,10 @@
                             color: #f1f1f1;
                             
 
-                            &:hover {
-                                //background-color: rgba(255, 255, 255, 0.35);
-                                transform: rotate(15deg);
-                            }
+                            // &:hover {
+                            //     //background-color: rgba(255, 255, 255, 0.35);
+                            //     //transform: rotate(15deg);
+                            // }
                         }
                     }
                 }
@@ -337,14 +338,19 @@
             transition: background-color 0.3s ease;
 
             .icon-me {
-                width: auto;
+                width: 200px;
                 display: flex;
                 align-items: center;
 
+                // &:hover {
+                //     background-color: rgba(255, 255, 255, 0.2);
+                // }
+
                 span {
                     text-align: center;
+                    
                     color: #ffffff;
-                    text-underline-offset: none;
+                    text-decoration: none;
                 }
             }
 

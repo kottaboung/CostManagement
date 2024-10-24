@@ -9,7 +9,7 @@
     <!-- Iterate through cards and display user information -->
     <div *ngFor="let card of cards" class="card">
       <div class="card-body">
-        <img [src]="card.EmployeeImage" class="card-img-top rounded-circle" width="100" height="100">
+        <icon-svg class="card-img-top rounded-circle" style="width: 100px; height: 100px;" [path]="'User2'" [size]="'6x'" [color]="'gray'" />
         <h5 class="card-title">Name: {{ card.EmployeeName }}</h5>
         <p class="card-text">Position: {{ card.EmployeePosition }}</p>
         <p class="card-text">Cost: {{ card.EmployeeCost | numberFormat }} THB</p>
