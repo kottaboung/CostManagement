@@ -1,9 +1,7 @@
 
 export interface Employee {
-  id: number; 
-  emName: string;
-  emCost: number;
-  possition: string;
+  EmployeeId: number; 
+  EmployeeName: string;
 }
 
 export interface Module {

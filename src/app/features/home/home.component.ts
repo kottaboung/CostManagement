@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class HomeComponent {
 
   @Input() public page: string | undefined;
-  public isSidebarMini = false;
+  public isSidebarMini = true;
   isDropdownOpen: boolean = false;
 
   // constructor(

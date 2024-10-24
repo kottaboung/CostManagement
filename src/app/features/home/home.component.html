@@ -1,50 +1,74 @@
 <div class="home-container">
-    <nav class="sidebar-left" [ngClass]="{'mini': isSidebarMini}" (click)="toggleSidebar($event)">
-        <div class="sidebar-left-header m-0 p-0">
-            <p style="cursor: default;" *ngIf="!isSidebarMini" class="text-name hl-text">Cost <br/> Management</p>
-            <div>
-                <a (click)="toggleSidebar($event)">
-                    <!-- <icon-svg [path]="isSidebarMini ? 'expand' : 'collapse'" [size]="'lg'" /> -->
-                </a>
-            </div>
+    <nav class="sidebar-left" [ngClass]="{'mini': isSidebarMini}">
+        <div class="sidebar-left-header">
+            <p *ngIf="!isSidebarMini" class="text-name">Cost <br/> Management</p>
         </div>
-        <hr class="hr" *ngIf="!isSidebarMini">
+        
+        <hr class="sidebar-divider" />
+    
         <div class="sidebar-left-main">
-            <ul (click)="preventClose($event)">
-                <li>
-                    <a id="item" routerLink="/dashboard" routerLinkActive="active-tab" class="nav-link text-name">Dashboard</a>
-                </li>
-                <li>
-                    <a id="item" routerLink="/user" routerLinkActive="active-tab" class="nav-link text-name">User</a>
-                </li>
-                <li>
-                    <a id="item" routerLink="/projects" routerLinkActive="active-tab" class="nav-link text-name">Projects</a>
-                </li>
-            </ul>   
-        </div>
-    </nav>
-    <div class="container-content">
-        <div class="header">
-            <p class="text-name">{{ this.page }}</p>
-            <div class="header-right">
-                <input type="text" class="search-bar" placeholder="Search...">
-                <div class="profile-dropdown">
-                    <button class="profile-btn" (click)="toggleDropdown()">
-                        <icon-svg [path]="'User2'" [size]="'2x'" [color]="'gray'"></icon-svg>
-                        <!-- <span class="profile-name">Username</span> -->
-                    </button>
-                    <div class="dropdown-content" [ngClass]="{'active': isDropdownOpen}">
-                        <a href="#">Profile</a>
-                        <!-- <a (click)="onSetting()">Settings</a> -->
-                        <a [routerLink]="['/about/setting']">Setting</a>
-                        <a href="#">Logout</a>
+            <div [class]="isSidebarMini ? 'sidebar-content': 'sidebar-contented' ">
+                <a [class]="isSidebarMini ? 'toggle-btn' : 'toggled-btn' " (click)="toggleSidebar($event)">
+                    <div class="icon-me">
+                        <icon-svg class="col-3" [path]="isSidebarMini ? 'expand' : 'collapse'" [size]="'lg'" />
+                        <span class="col-9" *ngIf="!isSidebarMini">Details</span>
                     </div>
-                </div>
-                
+                </a>
+    
+                <ul>
+                    <li>
+                        <a routerLink="/dashboard" routerLinkActive="active-tab" class="nav-link">
+                            <div class="icon-bg">
+                                <!-- <icon-svg [path]="'Dashboard-Icon'" [size]="'lg'" /> -->
+                                 <strong>D</strong>
+                            </div>
+                            <span *ngIf="!isSidebarMini">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/user" routerLinkActive="active-tab" class="nav-link">
+                            <div class="icon-bg">
+                                <!-- <icon-svg [path]="'User2'" [size]="'lg'" /> -->
+                                <strong>U</strong>
+                            </div>
+                            <span *ngIf="!isSidebarMini">User</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/projects" routerLinkActive="active-tab" class="nav-link">
+                            <div class="icon-bg">
+                                <!-- <icon-svg [path]="'projects'" [size]="'lg'" /> -->
+                                <strong>P</strong>
+                            </div>
+                            <span *ngIf="!isSidebarMini">Projects</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <section class="content">
-            <router-outlet></router-outlet>
-        </section>     
+    </nav>    
+    
+  
+    <div class="container-content">
+      <div class="header">
+        <p class="text-name">{{ this.page }}</p>
+        <div class="header-right">
+          <input type="text" class="search-bar" placeholder="Search...">
+          <div class="profile-dropdown">
+            <button class="profile-btn" (click)="toggleDropdown()">
+              <icon-svg [path]="'User2'" [size]="'2x'" [color]="'gray'"></icon-svg>
+            </button>
+            <div class="dropdown-content" [ngClass]="{'active': isDropdownOpen}">
+              <a href="#">Profile</a>
+              <a [routerLink]="['/about/setting']">Setting</a>
+              <a href="#">Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="content">
+        <router-outlet></router-outlet>
+      </section>
     </div>
-</div>
+  </div>
+  

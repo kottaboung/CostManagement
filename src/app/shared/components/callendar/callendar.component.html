@@ -66,20 +66,25 @@
         </div>
         <div class="mb-3">
           <label for="employees" class="form-label">Employee</label>
-          <input type="text" class="form-control mb-3" id="employee" #employeeName formControlName="employee" >
+          <select class="form-select mb-3" id="employee" #employeeName formControlName="employee">
+            <option *ngFor="let employee of filteredEmList" [value]="employee.EmployeeId">{{ employee.EmployeeName }}</option>
+          </select>
+          
           <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-success" type="button" (click)="addEmployee(employeeName)" >add</button>
+            <button class="btn btn-success" type="button" (click)="addEmployee(employeeName)" >Add</button>
           </div>
+        
           <div *ngIf="Evemployees.controls.length > 0">
-            <h5 class="mb-2">Add Event To</h5>
+            <h5 class="mb-2">Added Employees</h5>
             <ul class="list-group mb-3 ova">
-                <li *ngFor="let employee of Evemployees.controls; let i = index" class="mb-2 shadow-sm rounded list-group-item d-flex justify-content-between align-items-center">
-                    {{ employee.get('employeeName')?.value }}
-                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeEmployee(i)"> &times;</button>
-                </li>
+              <li *ngFor="let employee of Evemployees.controls; let i = index" class="mb-2 shadow-sm rounded list-group-item d-flex justify-content-between align-items-center">
+                {{ employee.get('employeeName')?.value }}
+                <button type="button" class="btn btn-outline-danger btn-sm" (click)="removeEmployee(i)"> &times;</button>
+              </li>
             </ul>
+          </div>
         </div>
-        </div>
+        
         <div class="mb-3">
           <label for="eventDescription" class="form-label">Description</label>
           <textarea id="eventDescription" class="form-control" formControlName="descript"></textarea>
