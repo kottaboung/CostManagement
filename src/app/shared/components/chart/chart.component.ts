@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import * as echarts from 'echarts';
 import { ApiService } from '../../../shared/services/api.service';
@@ -11,7 +11,7 @@ import { ModalService } from '../../services/modal.service';
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
-export class ChartComponent implements OnInit, AfterViewInit {
+export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   private chartInstance!: echarts.ECharts;
@@ -42,6 +42,17 @@ export class ChartComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.chartInstance = echarts.init(this.chartContainer.nativeElement); // Initialize chart instance
     this.updateChartForSelectedYear([], this.selectedYear); // Initialize with an empty array
+    window.addEventListener('resize', this.onWindowResize);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.onWindowResize); // Clean up the resize listener
+  }
+
+  onWindowResize = (): void => {
+    if (this.chartInstance) {
+      this.chartInstance.resize(); // Resize the chart when the window size changes
+    }
   }
 
   // Load data and initialize the available years

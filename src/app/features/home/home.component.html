@@ -11,7 +11,7 @@
                 <a [class]="isSidebarMini ? 'toggle-btn' : 'toggled-btn' " (click)="toggleSidebar($event)">
                     <div class="icon-me">
                         <icon-svg class="col-3" [path]="isSidebarMini ? 'expand' : 'collapse'" [size]="'lg'" />
-                        <span class="col-9" *ngIf="!isSidebarMini">Details</span>
+                        <span class="col-9" *ngIf="!isSidebarMini"><strong>Details</strong></span>
                     </div>
                 </a>
     
@@ -19,8 +19,8 @@
                     <li>
                         <a routerLink="/dashboard" routerLinkActive="active-tab" class="nav-link">
                             <div class="icon-bg">
-                                <!-- <icon-svg [path]="'Dashboard-Icon'" [size]="'lg'" /> -->
-                                 <strong>D</strong>
+                                <icon-svg [path]="'Dashboard-Icon'" [size]="'3x'" [color]="'white'" />
+                                 <!-- <strong>D</strong> -->
                             </div>
                             <span *ngIf="!isSidebarMini">Dashboard</span>
                         </a>
@@ -28,8 +28,8 @@
                     <li>
                         <a routerLink="/user" routerLinkActive="active-tab" class="nav-link">
                             <div class="icon-bg">
-                                <!-- <icon-svg [path]="'User2'" [size]="'lg'" /> -->
-                                <strong>U</strong>
+                                <icon-svg [path]="'User2'" [size]="'3x'"[color]="'white'" />
+                                <!-- <strong>U</strong> -->
                             </div>
                             <span *ngIf="!isSidebarMini">User</span>
                         </a>
